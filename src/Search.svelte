@@ -35,6 +35,11 @@
         });
     }
 
+    function loadMember(id) {
+        console.log("dispatch memberSelected: " + id)
+        dispatch('memberSelected', id);
+    }
+
     async function loadSubscriptionPeriods() {
         // const accessToken = await auth0Client.getTokenSilently();
         //
@@ -85,7 +90,7 @@
 
         <tbody>
         {#each members.members as member}
-            <tr on:click|preventDefault={e => loadMembers(1)}>
+            <tr on:click|preventDefault={e => loadMember(member.id)}>
                 <th scope="row">{member.id}</th>
                 <td>{member.lastNameOrCompanyName}</td>
                 <td>{member.firstName}</td>

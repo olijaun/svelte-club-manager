@@ -6,7 +6,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors())
 
-const members = {"subscriptionPeriodIdFilter":null,"members":[{"subscriptions":[],"id":"P00000085","firstName":"Daniel","lastNameOrCompanyName":"Jaun","address":"Freiburgstrasse 8, 3150 Schwarzenburg"},{"subscriptions":[{"subscriptionPeriodId":"1","subscriptionTypeId":"1","id":"318c9d74-ad6a-4345-8de6-a687501a030e","memberId":"P00000986","subscriptionDisplayInfo":"Vereinsjahr 2018 / Normalmitgliedschaft 2018"},{"subscriptionPeriodId":"2","subscriptionTypeId":"4","id":"2a764b21-8a78-4a81-9c88-c3a1317958eb","memberId":"P00000986","subscriptionDisplayInfo":"Vereinsjahr 2019 / Doppelgönnermitgliedschaft 2019"},{"subscriptionPeriodId":"3","subscriptionTypeId":"4","id":"ab7a45cc-44dc-2a1a-e0ca-a859579ab2c5","memberId":"P00000986","subscriptionDisplayInfo":"Vereinsjahr 2020 / Doppelgönnermitgliedschaft 2020"}],"id":"P00000986","firstName":"Oliver","lastNameOrCompanyName":"Jaun","address":"Monbijoustrasse 71, 3007 Bern"},{"subscriptions":[{"subscriptionPeriodId":"1","subscriptionTypeId":"1","id":"6315895c-8a5d-44de-8d5e-d162c3a58047","memberId":"P00002986","subscriptionDisplayInfo":"Vereinsjahr 2018 / Normalmitgliedschaft 2018"}],"id":"P00002986","firstName":"Elizabeth","lastNameOrCompanyName":"Jaun","address":"Monbijoustrasse 71, 3007 Bern"}]}
+const members = {"subscriptionPeriodIdFilter":null,"members":[{"subscriptions":[],"id":"P00000085","firstName":"Daniel","lastNameOrCompanyName":"Meier","address":"Freiburgstrasse 42, 3000 Bern"},{"subscriptions":[{"subscriptionPeriodId":"1","subscriptionTypeId":"1","id":"318c9d74-ad6a-4345-8de6-a687501a030e","memberId":"P00000986","subscriptionDisplayInfo":"Vereinsjahr 2018 / Normalmitgliedschaft 2018"},{"subscriptionPeriodId":"2","subscriptionTypeId":"4","id":"2a764b21-8a78-4a81-9c88-c3a1317958eb","memberId":"P00000986","subscriptionDisplayInfo":"Vereinsjahr 2019 / Doppelgönnermitgliedschaft 2019"},{"subscriptionPeriodId":"3","subscriptionTypeId":"4","id":"ab7a45cc-44dc-2a1a-e0ca-a859579ab2c5","memberId":"P00000986","subscriptionDisplayInfo":"Vereinsjahr 2020 / Doppelgönnermitgliedschaft 2020"}],"id":"P00000986","firstName":"Oliver","lastNameOrCompanyName":"Jaun","address":"Monbijoustrasse 71, 3007 Bern"},{"subscriptions":[{"subscriptionPeriodId":"1","subscriptionTypeId":"1","id":"6315895c-8a5d-44de-8d5e-d162c3a58047","memberId":"P00002986","subscriptionDisplayInfo":"Vereinsjahr 2018 / Normalmitgliedschaft 2018"}],"id":"P00002986","firstName":"Elizabeth","lastNameOrCompanyName":"Jaun","address":"Blastrasse 71, 3000 Bern"}]}
 
 app.get("/members", (req, res) => {
     res.send(members);
@@ -18,7 +18,13 @@ app.get("/subscription-periods", (req, res) => {
     res.send(subscriptionPeriods);
 });
 
-const member = {"subscriptions":[{"subscriptionPeriodId":"1","subscriptionTypeId":"1","id":"318c9d74-ad6a-4345-8de6-a687501a030e","memberId":"P00000986","subscriptionDisplayInfo":"Vereinsjahr 2018 / Normalmitgliedschaft 2018"},{"subscriptionPeriodId":"2","subscriptionTypeId":"4","id":"2a764b21-8a78-4a81-9c88-c3a1317958eb","memberId":"P00000986","subscriptionDisplayInfo":"Vereinsjahr 2019 / Doppelgönnermitgliedschaft 2019"},{"subscriptionPeriodId":"3","subscriptionTypeId":"4","id":"ab7a45cc-44dc-2a1a-e0ca-a859579ab2c5","memberId":"P00000986","subscriptionDisplayInfo":"Vereinsjahr 2020 / Doppelgönnermitgliedschaft 2020"}],"id":"P00000986","firstName":"Oliver","lastNameOrCompanyName":"Jaun","address":"Monbijoustrasse 71, 3007 Bern"}
+const person = {"type":"NATURAL","basicData":{"name":{"lastNameOrCompanyName":"Jaun","firstName":"Oliver"},"birthDate":"1979-01-22","gender":"FEMALE"},"streetAddress":{"street":"Monbijoustrasse","houseNumber":"71","zip":"3007","city":"Bern","isoCountryCode":"DE","state":null},"contactData":{"phoneNumber":"++41786139713","emailAddress":"oliver@jaun.org"},"id":"P00000986"}
+
+app.get("/persons/P*", (req, res) => {
+    res.send(person);
+});
+
+const member = {"subscriptions":[{"subscriptionPeriodId":"1","subscriptionTypeId":"1","id":"318c9d74-ad6a-4345-8de6-a687501a030e","memberId":"P00000986","subscriptionDisplayInfo":"Vereinsjahr 2018 / Normalmitgliedschaft 2018"},{"subscriptionPeriodId":"2","subscriptionTypeId":"4","id":"2a764b21-8a78-4a81-9c88-c3a1317958eb","memberId":"P00000986","subscriptionDisplayInfo":"Vereinsjahr 2019 / Doppelgönnermitgliedschaft 2019"},{"subscriptionPeriodId":"3","subscriptionTypeId":"4","id":"ab7a45cc-44dc-2a1a-e0ca-a859579ab2c5","memberId":"P00000986","subscriptionDisplayInfo":"Vereinsjahr 2020 / Doppelgönnermitgliedschaft 2020"}],"id":"P00000986","firstName":"Oliver","lastNameOrCompanyName":"Jaun","address":"Blastrasse 71, 3000 Bern"}
 
 app.get("/members/P*", (req, res) => {
     res.send(member);

@@ -5,13 +5,16 @@
     import Login from "./Login.svelte";
     import Search from "./Search.svelte";
     import Navbar from "./Navbar.svelte";
+    import Member from "./Member.svelte";
 
     let noAuthMode = true;
 
     let auth0Client;
     let newTask;
 
-    let selectedComponent = Search;
+    let state;
+
+    let editMemberId;
 
     onMount(async () => {
         if (!noAuthMode) {
@@ -31,6 +34,12 @@
         }
     }
 
+    function editMember(id) {
+        console.log("edit!!!!! " + id.detail)
+        state = 'Edit';
+        editMemberId = id.detail;
+    }
+
     function logout() {
         if (!noAuthMode) {
             auth.logout(auth0Client);
@@ -38,8 +47,11 @@
     }
 
     function select(event) {
-        console.log("selectedComponent: " + event.detail);
-        selectedComponent = event.detail;
+        if (event.detail === "New Member") {
+            state = "New";
+        } else if (event.detail === "Search") {
+            state = "Search";
+        }
     }
 
     async function addItem() {
@@ -90,12 +102,22 @@
 
 <main>
 
-    <Navbar on:componentSelected={select} on:login={login} on:logout={logout} isAuthenticated={isAuthenticated} user={user}/>
+    <Navbar on:componentSelected={select} on:login={login} on:logout={logout} isAuthenticated={isAuthenticated}
+            user={user}/>
 
     <!-- Application -->
     {#if !$isAuthenticated}
         <Login on:login={login}/>
     {:else}
-        <svelte:component this={selectedComponent}/>
+
+        {#if state === "Search" }
+            <Search on:memberSelected={editMember}/>
+        {/if}
+        {#if state === "Edit" }
+            <Member id={editMemberId}/>
+        {/if}
+        {#if state === "New"}
+            <Member/>
+        {/if}
     {/if}
 </main>

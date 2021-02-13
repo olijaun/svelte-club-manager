@@ -12,9 +12,8 @@
     let selectedItem;
 
     const navItems = [
-        { page: 'Search',   component: Search },
-        { page: 'Member',   component: Member },
-        // other navigation pages can go here
+        { page: 'Search', component: Search },
+        { page: 'New Member', component: Member },
     ];
 
     function login() {
@@ -28,7 +27,7 @@
     function componentSelected(i) {
         selectedItem = i;
         console.log("selectedItem: " + i)
-        dispatch('componentSelected', navItems[i].component);
+        dispatch('componentSelected', navItems[i].page);
     }
 
 </script>

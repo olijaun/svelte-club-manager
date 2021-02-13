@@ -1,5 +1,5 @@
 <script>
-    import {createEventDispatcher} from 'svelte';
+    import {createEventDispatcher, onMount} from 'svelte';
     import {countries} from './countries'
     import {bindClass, form} from 'svelte-forms';
 
@@ -13,11 +13,11 @@
         {value: 'JURISTIC', viewValue: 'juristic-person'}
     ];
 
-    let id;
+    export let id;
 
     let type = TYPES[0];
     let firstName;
-    let lastName;
+    let lastNameOrCompanyName;
     let birthdate;
 
     let email;
@@ -31,6 +31,46 @@
     let selectedCountry = countries.find(c => c.Code === "CH");
 
     const dispatch = createEventDispatcher();
+
+    onMount(async () => {
+        if(id) {
+            loadMember(id);
+        }
+    });
+
+    async function loadMember(id) {
+        // const accessToken = await auth0Client.getTokenSilently();
+        //
+        const response = await fetch(`http://localhost:8081/persons/` + id, {
+            method: 'GET',
+            headers: {
+                //Authorization: `Bearer ${accessToken}`
+            }
+        });
+
+        response.json().then(m => {
+            type = TYPES.find(t => t.value === m.type)
+
+            // basic data
+            firstName = m.basicData.name.firstName;
+            lastNameOrCompanyName = m.basicData.name.lastNameOrCompanyName;
+            birthdate = m.basicData.birthDate;
+            selectedGender = GENDERS.find(g => m.basicData.gender === g.value);
+            console.log(m.basicData.gender + ": gender: " + selectedGender.value);
+            // address
+            street = m.streetAddress.street;
+
+            streetNumber = m.streetAddress.houseNumber;
+            zip = m.streetAddress.zip;
+            city = m.streetAddress.city;
+            selectedCountry = countries.find(c => m.streetAddress.isoCountryCode === c.Code)
+
+            // contact data
+            email = m.contactData.emailAddress;
+            phone = m.contactData.phoneNumber;
+        });
+    }
+
 
     function emailCheck(val) {
         if (val === '' || val == undefined) {
@@ -47,7 +87,7 @@
 
     const memberForm = form(() => ({
         firstName: {value: firstName, validators: []},
-        lastName: {value: lastName, validators: ['required']},
+        lastNameOrCompanyName: {value: lastNameOrCompanyName, validators: ['required']},
         birthdate: {value: birthdate, validators: []},
         email: {value: email, validators: [emailRule]},
         phone: {value: phone, validators: []},
@@ -73,14 +113,14 @@
 
         <div class="form-check col-md-6">
             <input bind:group={type} value={TYPES[0]} class="form-check-input" type="radio" name="exampleRadios"
-                   id="typeRadio0">
+                   id="typeRadio0" disabled={id != undefined}>
             <label class="form-check-label" for="typeRadio0">
                 {TYPES[0].viewValue}
             </label>
         </div>
         <div class="form-check col-md6">
             <input bind:group={type} value={TYPES[1]} class="form-check-input" type="radio" name="exampleRadios"
-                   id="typeRadio1">
+                   id="typeRadio1" disabled={id != undefined}>
             <label class="form-check-label" for="typeRadio1">
                 {TYPES[1].viewValue}
             </label>
@@ -97,9 +137,9 @@
         {/if}
         <div class="form-floating col-md-6">
             <input type="text" class="form-control" id="inputLastName"
-                   bind:value={lastName}
+                   bind:value={lastNameOrCompanyName}
                    use:bindClass={{ form: memberForm }}
-                   class:is-invalid={!$memberForm.fields.lastName.valid}/>
+                   class:is-invalid={!$memberForm.fields.lastNameOrCompanyName.valid}/>
             <label for="inputLastName" class="form-label">{isNaturalPerson ? "Last name" : "Company Name"}</label>
         </div>
         {#if isNaturalPerson}
@@ -115,7 +155,7 @@
                 <select bind:value={selectedGender} class="form-control" id="periodSelect">
                     <option value=""></option>
                     {#each GENDERS as gender}
-                        <option value="{gender.value}">{gender.viewValue}</option>
+                        <option value="{gender}">{gender.viewValue}</option>
                     {/each}
                 </select>
                 <label for="periodSelect" class="form-label">Gender</label>
