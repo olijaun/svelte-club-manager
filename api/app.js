@@ -18,6 +18,12 @@ app.get("/subscription-periods", (req, res) => {
     res.send(subscriptionPeriods);
 });
 
+const member = {"subscriptions":[{"subscriptionPeriodId":"1","subscriptionTypeId":"1","id":"318c9d74-ad6a-4345-8de6-a687501a030e","memberId":"P00000986","subscriptionDisplayInfo":"Vereinsjahr 2018 / Normalmitgliedschaft 2018"},{"subscriptionPeriodId":"2","subscriptionTypeId":"4","id":"2a764b21-8a78-4a81-9c88-c3a1317958eb","memberId":"P00000986","subscriptionDisplayInfo":"Vereinsjahr 2019 / Doppelgönnermitgliedschaft 2019"},{"subscriptionPeriodId":"3","subscriptionTypeId":"4","id":"ab7a45cc-44dc-2a1a-e0ca-a859579ab2c5","memberId":"P00000986","subscriptionDisplayInfo":"Vereinsjahr 2020 / Doppelgönnermitgliedschaft 2020"}],"id":"P00000986","firstName":"Oliver","lastNameOrCompanyName":"Jaun","address":"Monbijoustrasse 71, 3007 Bern"}
+
+app.get("/members/P*", (req, res) => {
+    res.send(member);
+});
+
 app.listen(8081, () => {
     console.log("App's running on port 8081");
 });

@@ -1,15 +1,21 @@
 <script>
     import {createEventDispatcher} from 'svelte';
     import {countries} from './countries'
-    import {form, bindClass} from 'svelte-forms';
+    import {bindClass, form} from 'svelte-forms';
 
     let GENDERS = [
         {value: 'MALE', viewValue: 'male'},
         {value: 'FEMALE', viewValue: 'female'}
     ];
 
-    const empty = value => ({ valid: value === '', name: 'empty' });
+    let TYPES = [
+        {value: 'NATURAL', viewValue: 'natural-person'},
+        {value: 'JURISTIC', viewValue: 'juristic-person'}
+    ];
 
+    let id;
+
+    let type = TYPES[0];
     let firstName;
     let lastName;
     let birthdate;
@@ -22,12 +28,12 @@
     let streetNumber;
     let zip;
     let city;
-    let selectedCountry;
+    let selectedCountry = countries.find(c => c.Code === "CH");
 
     const dispatch = createEventDispatcher();
 
     function emailCheck(val) {
-        if(val === '' || val == undefined) {
+        if (val === '' || val == undefined) {
             return true;
         }
         // Email regex from Open Web Application Security Project (OWASP) : https://owasp.org/www-community/OWASP_Validation_Regex_Repository
@@ -35,7 +41,9 @@
         return Boolean(val) && regex.test(val);
     }
 
-    const emailRule = value => ({ valid: emailCheck(value), name: 'emailOrEmpty'})
+    $: isNaturalPerson = type === TYPES[0];
+
+    const emailRule = value => ({valid: emailCheck(value), name: 'emailOrEmpty'})
 
     const memberForm = form(() => ({
         firstName: {value: firstName, validators: []},
@@ -56,39 +64,63 @@
 </script>
 
 <div class="container mt-5">
-    <form on:submit|preventDefault={e => save()} class="row g-3" novalidate>
+    <form on:submit|preventDefault={e => save()} class="row g-2" novalidate>
 
-        <div class="form-floating col-md-6">
-            <input type="text" class="form-control" id="inputFirstName"
-                   bind:value={firstName}
-                   use:bindClass={{ form: memberForm }}
-                   class:is-invalid={!$memberForm.fields.firstName.valid}/>
-            <label for="inputFirstName" class="form-label">First name</label>
+        <div class="form-floating col-md-12">
+            <input type="text" class="form-control" id="inputMemberId" bind:value={id} disabled/>
+            <label for="inputMemberId" class="form-label">Member Id</label>
         </div>
+
+        <div class="form-check col-md-6">
+            <input bind:group={type} value={TYPES[0]} class="form-check-input" type="radio" name="exampleRadios"
+                   id="typeRadio0">
+            <label class="form-check-label" for="typeRadio0">
+                {TYPES[0].viewValue}
+            </label>
+        </div>
+        <div class="form-check col-md6">
+            <input bind:group={type} value={TYPES[1]} class="form-check-input" type="radio" name="exampleRadios"
+                   id="typeRadio1">
+            <label class="form-check-label" for="typeRadio1">
+                {TYPES[1].viewValue}
+            </label>
+        </div>
+
+        {#if isNaturalPerson}
+            <div class="form-floating col-md-6">
+                <input type="text" class="form-control" id="inputFirstName"
+                       bind:value={firstName}
+                       use:bindClass={{ form: memberForm }}
+                       class:is-invalid={!$memberForm.fields.firstName.valid}/>
+                <label for="inputFirstName" class="form-label">First name</label>
+            </div>
+        {/if}
         <div class="form-floating col-md-6">
             <input type="text" class="form-control" id="inputLastName"
                    bind:value={lastName}
                    use:bindClass={{ form: memberForm }}
                    class:is-invalid={!$memberForm.fields.lastName.valid}/>
-            <label for="inputLastName" class="form-label">Last name</label>
+            <label for="inputLastName" class="form-label">{isNaturalPerson ? "Last name" : "Company Name"}</label>
         </div>
-        <div class="form-floating col-md-6">
-            <input type="date" class="form-control date" id="inputBirthday"
-                   bind:value={birthdate}
-                   use:bindClass={{ form: memberForm }}
-                   class:is-invalid={!$memberForm.fields.birthdate.valid}/>
-            <label for="inputBirthday" class="form-label">Birthday</label>
-        </div>
-        <div class="form-floating col-md-6">
-            <select bind:value={selectedGender} class="form-control" id="periodSelect">
-                <option value=""></option>
-                {#each GENDERS as gender}
-                    <option value="{gender.value}">{gender.viewValue}</option>
-                {/each}
-            </select>
-            <label for="periodSelect" class="form-label">Gender</label>
-        </div>
+        {#if isNaturalPerson}
+            <div class="form-floating col-md-6">
+                <input type="date" class="form-control date" id="inputBirthday"
+                       bind:value={birthdate}
+                       use:bindClass={{ form: memberForm }}
+                       class:is-invalid={!$memberForm.fields.birthdate.valid}/>
+                <label for="inputBirthday" class="form-label">Birthday</label>
+            </div>
 
+            <div class="form-floating col-md-6">
+                <select bind:value={selectedGender} class="form-control" id="periodSelect">
+                    <option value=""></option>
+                    {#each GENDERS as gender}
+                        <option value="{gender.value}">{gender.viewValue}</option>
+                    {/each}
+                </select>
+                <label for="periodSelect" class="form-label">Gender</label>
+            </div>
+        {/if}
 
         <div class="form-floating col-md-6">
             <input type="text" class="form-control" id="inputEmail"
@@ -144,7 +176,8 @@
             <label for="inputCountry" class="form-label">Country</label>
         </div>
         <div class="col-12">
-            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="submit" class="btn btn-primary" disabled={!$memberForm.valid || !$memberForm.dirty}>Save
+            </button>
         </div>
     </form>
 

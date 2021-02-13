@@ -35,7 +35,7 @@
 
 <!-- App Bar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="/#">Task Manager</a>
+    <a class="navbar-brand" href="/#">Club Manager</a>
     <button
             class="navbar-toggler"
             type="button"
@@ -59,7 +59,7 @@
 
               {#each navItems as item, i}
 		<li class="nav-item">
-			<a class={selectedItem==i ? "nav-link active p-2 ml-1" : "p-2 ml-1 nav-link"} on:click|preventDefault="{e => componentSelected(i)}">{item.page}</a>
+			<a href="/#" class={selectedItem==i ? "nav-link active p-2 ml-1" : "p-2 ml-1 nav-link"} on:click|preventDefault="{e => componentSelected(i)}">{item.page}</a>
 		</li>
               {/each}
 
