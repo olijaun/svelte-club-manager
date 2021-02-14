@@ -5,18 +5,18 @@
 
     let searchString = '';
     let timer;
-    let members = {members: []};
-    let periods = [];
+    let membersPromise;
+    let periodsPromise = [];
     let selectedPeriod;
 
     onMount(async () => {
-        loadSubscriptionPeriods();
+        periodsPromise = loadSubscriptionPeriods();
     });
 
     const debounce = v => {
         clearTimeout(timer);
         timer = setTimeout(() => {
-            loadMembers(v)
+            membersPromise = loadMembers(v)
         }, 750);
     }
 
@@ -30,12 +30,10 @@
             }
         });
 
-        response.json().then(p => {
-            members = p;
-        });
+        return response.json();
     }
 
-    function loadMember(id) {
+    function memberSelected(id) {
         console.log("dispatch memberSelected: " + id)
         dispatch('memberSelected', id);
     }
@@ -50,9 +48,7 @@
             }
         });
 
-        response.json().then(p => {
-            periods = p.subscriptionPeriods
-        });
+        return response.json().then(p => p.subscriptionPeriods);
     }
 
     function periodChanged(e) {
@@ -62,49 +58,75 @@
 
 <div class="container mt-5">
 
-    <div class="mb-3">
-        <label for="searchStringInput" class="form-label">Search String</label>
-        <input type="searchString" class="form-control" id="searchStringInput"
-               on:keyup={({ target: { value } }) => debounce(value)}>
-    </div>
-    <div class="mb-3">
-        <label for="periodSelect" class="form-label">Period</label>
-        <select bind:value={selectedPeriod} class="form-control" id="periodSelect" on:change={periodChanged}>
-            <option value="all">*</option>
-            {#each periods as period}
-                <option value="{period.id}">{period.name}</option>
-            {/each}
-        </select>
-    </div>
+    {#await periodsPromise}
 
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Nachname</th>
-            <th scope="col">Vorname</th>
-            <th scope="col">Adresse</th>
-            <th scope="col">Typ</th>
-        </tr>
-        </thead>
+        <p>loading...</p>
 
-        <tbody>
-        {#each members.members as member}
-            <tr on:click|preventDefault={e => loadMember(member.id)}>
-                <th scope="row">{member.id}</th>
-                <td>{member.lastNameOrCompanyName}</td>
-                <td>{member.firstName}</td>
-                <td>{member.address}</td>
-                <td>
-                    <ul>
-                    {#each member.subscriptions as subscription}
-                        <li>{subscription.subscriptionDisplayInfo}</li>
-                    {/each}
-                    </ul>
-                </td>
-            </tr>
-        {/each}
-        </tbody>
-    </table>
+    {:then periods}
+        <div class="mb-3">
+            <label for="searchStringInput" class="form-label">Search String</label>
+            <input type="searchString" class="form-control" id="searchStringInput"
+                   on:keyup={({ target: { value } }) => debounce(value)}>
+        </div>
+        <div class="mb-3">
+            <label for="periodSelect" class="form-label">Period</label>
+            <select bind:value={selectedPeriod} class="form-control" id="periodSelect" on:change={periodChanged}>
+                <option value="all">*</option>
+                {#each periods as period}
+                    <option value="{period.id}">{period.name}</option>
+                {/each}
+            </select>
+        </div>
+
+    {:catch error}
+
+        <p>Error loading search: {error}</p>
+
+    {/await}
+
+    {#if membersPromise}
+        {#await membersPromise}
+
+            <p>Searching...</p>
+
+        {:then members}
+
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nachname</th>
+                    <th scope="col">Vorname</th>
+                    <th scope="col">Adresse</th>
+                    <th scope="col">Typ</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                {#each members.members as member}
+                    <tr on:click|preventDefault={e => memberSelected(member.id)}>
+                        <th scope="row">{member.id}</th>
+                        <td>{member.lastNameOrCompanyName}</td>
+                        <td>{member.firstName}</td>
+                        <td>{member.address}</td>
+                        <td>
+                            <ul>
+                                {#each member.subscriptions as subscription}
+                                    <li>{subscription.subscriptionDisplayInfo}</li>
+                                {/each}
+                            </ul>
+                        </td>
+                    </tr>
+                {/each}
+
+
+                </tbody>
+            </table>
+
+        {:catch error}
+            <p>Error when searching: {error}</p>
+        {/await}
+    {/if}
 
 </div>

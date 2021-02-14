@@ -8,6 +8,14 @@ app.use(cors())
 
 const members = {"subscriptionPeriodIdFilter":null,"members":[{"subscriptions":[],"id":"P00000085","firstName":"Daniel","lastNameOrCompanyName":"Meier","address":"Freiburgstrasse 42, 3000 Bern"},{"subscriptions":[{"subscriptionPeriodId":"1","subscriptionTypeId":"1","id":"318c9d74-ad6a-4345-8de6-a687501a030e","memberId":"P00000986","subscriptionDisplayInfo":"Vereinsjahr 2018 / Normalmitgliedschaft 2018"},{"subscriptionPeriodId":"2","subscriptionTypeId":"4","id":"2a764b21-8a78-4a81-9c88-c3a1317958eb","memberId":"P00000986","subscriptionDisplayInfo":"Vereinsjahr 2019 / Doppelgönnermitgliedschaft 2019"},{"subscriptionPeriodId":"3","subscriptionTypeId":"4","id":"ab7a45cc-44dc-2a1a-e0ca-a859579ab2c5","memberId":"P00000986","subscriptionDisplayInfo":"Vereinsjahr 2020 / Doppelgönnermitgliedschaft 2020"}],"id":"P00000986","firstName":"Oliver","lastNameOrCompanyName":"Jaun","address":"Monbijoustrasse 71, 3007 Bern"},{"subscriptions":[{"subscriptionPeriodId":"1","subscriptionTypeId":"1","id":"6315895c-8a5d-44de-8d5e-d162c3a58047","memberId":"P00002986","subscriptionDisplayInfo":"Vereinsjahr 2018 / Normalmitgliedschaft 2018"}],"id":"P00002986","firstName":"Elizabeth","lastNameOrCompanyName":"Jaun","address":"Blastrasse 71, 3000 Bern"}]}
 
+function sleep(milliseconds) {
+    const date = Date.now();
+    let currentDate = null;
+    do {
+        currentDate = Date.now();
+    } while (currentDate - date < milliseconds);
+}
+
 app.get("/members", (req, res) => {
     res.send(members);
 });
