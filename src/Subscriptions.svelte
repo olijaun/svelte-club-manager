@@ -1,6 +1,6 @@
 <script>
     import {onMount} from 'svelte';
-    import { loadPeriods, loadMember } from './serivce'
+    import { loadPeriods, loadMember } from './service'
 
     export let id;
 

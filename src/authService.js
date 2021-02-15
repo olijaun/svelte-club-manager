@@ -1,5 +1,5 @@
 import createAuth0Client from "@auth0/auth0-spa-js";
-import { user, isAuthenticated, popupOpen } from "./store";
+import { token, user, isAuthenticated, popupOpen } from "./store";
 import config from "../auth_config";
 
 // see https://auth0.com/blog/authenticating-svelte-apps/
@@ -12,7 +12,6 @@ async function createClient() {
         audience: 'https://member-manager.jaun.org' // required to get jwt token. war früher bei angular-oauth2-oidc so gesetzt: customQueryParams: { audience: 'https://member-manager.jaun.org' },
     });
 
-
     return auth0Client;
 }
 
@@ -24,7 +23,7 @@ async function loginWithPopup(client, options) {
         user.set(await client.getUser());
         isAuthenticated.set(true);
 
-        let token = await client.getTokenSilently();
+        token.set(await client.getTokenSilently());
 
         console.log("raw token: " + token);
 

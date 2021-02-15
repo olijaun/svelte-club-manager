@@ -1,14 +1,30 @@
-import {countries} from "./countries";
-import {memberSearchResultStore} from "./stores";
+import {token, user} from "./store";
+
+const HOSTNAME = 'http://localhost:8081'
+//const HOSTNAME = 'https://loscaracoles.herokuapp.com'
+
+async function getToken() {
+
+    let accessToken = '';
+
+    await token.subscribe(t => {
+        accessToken = t;
+    });
+
+    return accessToken;
+}
+
+async function defaultHeaders() {
+    return {
+        Authorization: `Bearer ${await getToken()}`
+    }
+}
 
 export async function searchMembers(searchString) {
-    // const accessToken = await auth0Client.getTokenSilently();
-    //
-    const response = await fetch(`http://localhost:8081/members`, {
+
+    const response = await fetch(HOSTNAME + `/members`, {
         method: 'GET',
-        headers: {
-            //Authorization: `Bearer ${accessToken}`
-        }
+        headers: await defaultHeaders()
     });
 
     return response.json();
@@ -19,9 +35,7 @@ export async function loadPeriods() {
     //
     let response = await fetch(`http://localhost:8081/subscription-periods`, {
         method: 'GET',
-        headers: {
-            //Authorization: `Bearer ${accessToken}`
-        }
+        headers: await defaultHeaders()
     });
 
     return await response.json();
@@ -33,9 +47,7 @@ export async function loadMember(memberId) {
     //
     let response = await fetch(`http://localhost:8081/members/` + memberId, {
         method: 'GET',
-        headers: {
-            //Authorization: `Bearer ${accessToken}`
-        }
+        headers: await defaultHeaders()
     });
 
     return await response.json();
@@ -46,9 +58,7 @@ export async function loadPerson(id) {
     //
     const response = await fetch(`http://localhost:8081/persons/` + id, {
         method: 'GET',
-        headers: {
-            //Authorization: `Bearer ${accessToken}`
-        }
+        headers: await defaultHeaders()
     });
 
     return response.json();

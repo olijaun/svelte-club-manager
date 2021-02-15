@@ -1,19 +1,15 @@
 <script>
     import {onMount} from "svelte";
     import auth from "./authService";
-    import {isAuthenticated, tasks, user, user_tasks} from "./store";
+    import {isAuthenticated, user} from "./store";
     import Login from "./Login.svelte";
     import Search from "./Search.svelte";
     import Navbar from "./Navbar.svelte";
     import Member from "./Member.svelte";
 
-    let noAuthMode = true;
-
+    let noAuthMode = false;
     let auth0Client;
-    let newTask;
-
     let state;
-
     let editMemberId;
 
     onMount(async () => {
@@ -52,36 +48,6 @@
         } else if (event.detail === "Search") {
             state = "Search";
         }
-    }
-
-    async function addItem() {
-        console.log("add");
-        // const accessToken = await auth0Client.getTokenSilently();
-        //
-        // const response = await fetch(`http://localhost:8081/`, {
-        //     method: 'GET',
-        //     headers: {
-        //         Authorization: `Bearer ${accessToken}`
-        //     }
-        // });
-        // let data = await response.json();
-
-        //console.log("data: " + JSON.stringify(data));
-
-        let newTaskObject = {
-            id: genRandom(),
-            description: newTask,
-            completed: false,
-            user: $user.email
-        };
-
-        console.log(newTaskObject);
-
-        let updatedTasks = [...$tasks, newTaskObject];
-
-        tasks.set(updatedTasks);
-
-        newTask = "";
     }
 
     function genRandom(length = 7) {

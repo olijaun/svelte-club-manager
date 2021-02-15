@@ -2,7 +2,7 @@
     import {createEventDispatcher, onMount} from 'svelte';
     import {countries} from './countries'
     import {bindClass, form} from 'svelte-forms';
-    import {loadPerson} from './serivce'
+    import {loadPerson} from './service'
 
     let GENDERS = [
         {value: 'MALE', viewValue: 'male'},
@@ -57,7 +57,7 @@
                 // contact data
                 email = m.contactData.emailAddress;
                 phone = m.contactData.phoneNumber;
-            }, e => console.log("error"));
+            });
         } else {
             personPromise = Promise.resolve();
         }

@@ -2,7 +2,7 @@
     import {createEventDispatcher, onMount} from 'svelte';
     import {memberSearchResultStore} from './stores';
     import {searchCriteriaStore} from './stores';
-    import {loadPeriods, searchMembers} from './serivce'
+    import {loadPeriods, searchMembers} from './service'
 
     const dispatch = createEventDispatcher();
 
