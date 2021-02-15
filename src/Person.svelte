@@ -2,6 +2,7 @@
     import {createEventDispatcher, onMount} from 'svelte';
     import {countries} from './countries'
     import {bindClass, form} from 'svelte-forms';
+    import {loadPerson} from './serivce'
 
     let GENDERS = [
         {value: 'MALE', viewValue: 'male'},
@@ -15,7 +16,7 @@
 
     export let id;
 
-    let memberPromise;
+    let personPromise;
 
     let type = TYPES[0];
     let firstName;
@@ -36,44 +37,31 @@
 
     onMount(async () => {
         if (id) {
-            memberPromise = loadMember(id);
+            personPromise = loadPerson(id).then(m => {
+                type = TYPES.find(t => t.value === m.type)
+
+                // basic data
+                firstName = m.basicData.name.firstName;
+                lastNameOrCompanyName = m.basicData.name.lastNameOrCompanyName;
+                birthdate = m.basicData.birthDate;
+                selectedGender = GENDERS.find(g => m.basicData.gender === g.value);
+                console.log(m.basicData.gender + ": gender: " + selectedGender.value);
+                // address
+                street = m.streetAddress.street;
+
+                streetNumber = m.streetAddress.houseNumber;
+                zip = m.streetAddress.zip;
+                city = m.streetAddress.city;
+                selectedCountry = countries.find(c => m.streetAddress.isoCountryCode === c.Code)
+
+                // contact data
+                email = m.contactData.emailAddress;
+                phone = m.contactData.phoneNumber;
+            }, e => console.log("error"));
         } else {
-            memberPromise = Promise.resolve();
+            personPromise = Promise.resolve();
         }
     });
-
-    async function loadMember(id) {
-        // const accessToken = await auth0Client.getTokenSilently();
-        //
-        const response = await fetch(`http://localhost:8081/persons/` + id, {
-            method: 'GET',
-            headers: {
-                //Authorization: `Bearer ${accessToken}`
-            }
-        });
-
-        response.json().then(m => {
-            type = TYPES.find(t => t.value === m.type)
-
-            // basic data
-            firstName = m.basicData.name.firstName;
-            lastNameOrCompanyName = m.basicData.name.lastNameOrCompanyName;
-            birthdate = m.basicData.birthDate;
-            selectedGender = GENDERS.find(g => m.basicData.gender === g.value);
-            console.log(m.basicData.gender + ": gender: " + selectedGender.value);
-            // address
-            street = m.streetAddress.street;
-
-            streetNumber = m.streetAddress.houseNumber;
-            zip = m.streetAddress.zip;
-            city = m.streetAddress.city;
-            selectedCountry = countries.find(c => m.streetAddress.isoCountryCode === c.Code)
-
-            // contact data
-            email = m.contactData.emailAddress;
-            phone = m.contactData.phoneNumber;
-        }, e => console.log("error"));
-    }
 
     function emailCheck(val) {
         if (val === '' || val == undefined) {
@@ -108,7 +96,7 @@
 
 <div class="container mt-5">
 
-    {#await memberPromise}
+    {#await personPromise}
 
         <p>loading user...</p>
 

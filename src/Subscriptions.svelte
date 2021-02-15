@@ -1,5 +1,6 @@
 <script>
     import {onMount} from 'svelte';
+    import { loadPeriods, loadMember } from './serivce'
 
     export let id;
 
@@ -17,23 +18,14 @@
 
     onMount(async () => {
 
-        periodsPromise = loadPeriods();
-        memberPromise = loadMember(id);
-
-    });
-
-    async function loadMember(memberId) {
-        console.log("loading member: " + memberId)
-        // const accessToken = await auth0Client.getTokenSilently();
-        //
-        let response = await fetch(`http://localhost:8081/members/` + memberId, {
-            method: 'GET',
-            headers: {
-                //Authorization: `Bearer ${accessToken}`
-            }
+        periodsPromise = loadPeriods().then(periods => {
+            selectedPeriod = periods.subscriptionPeriods[0];
+            selectedSubscriptionType = selectedPeriod.subscriptionTypes[0];
+            console.log("load periods finished: " + JSON.stringify(periods.subscriptionPeriods));
+            return periods.subscriptionPeriods;
         });
 
-        return await response.json().then(member => {
+        memberPromise = loadMember(id).then(member => {
             displaySubscriptions = member.subscriptions.map(s => {
                 return {"subscriptionPeriodId": s.subscriptionPeriodId, "subscriptionTypeId": s.subscriptionTypeId}
             });
@@ -41,27 +33,7 @@
             console.log("return member: " + member);
             return member;
         });
-    }
-
-    async function loadPeriods() {
-        // const accessToken = await auth0Client.getTokenSilently();
-        //
-        let response = await fetch(`http://localhost:8081/subscription-periods`, {
-            method: 'GET',
-            headers: {
-                //Authorization: `Bearer ${accessToken}`
-            }
-        });
-
-        let periods = await response.json().then(periods => {
-            selectedPeriod = periods.subscriptionPeriods[0];
-            selectedSubscriptionType = selectedPeriod.subscriptionTypes[0];
-            console.log("load periods finished: " + JSON.stringify(periods.subscriptionPeriods));
-            return periods.subscriptionPeriods;
-        });
-
-        return periods;
-    }
+    });
 
     function addSubscription(subscriptionPeriodId, subscriptionTypeId) {
 
