@@ -6,7 +6,6 @@
 
     const dispatch = createEventDispatcher();
 
-    let searchString = '';
     let timer;
     let membersPromise;
     let periodsPromise = [];
@@ -19,13 +18,17 @@
     const debounce = v => {
         clearTimeout(timer);
         timer = setTimeout(() => {
-            membersPromise = searchMembers(v).then(m => {
-                console.log('storing search term: ' + v);
-                $searchCriteriaStore.term = v;
-                $memberSearchResultStore = m;
-                return m;
-            });
+            $searchCriteriaStore.searchString = v;
+            membersPromise = search($searchCriteriaStore)
         }, 750);
+    }
+
+    async function search(searchCriteria) {
+        console.log("searching via rest " + JSON.stringify(searchCriteria));
+        return searchMembers(searchCriteria).then(m => {
+            $memberSearchResultStore = m;
+            return m;
+        });
     }
 
     function memberSelected(id) {
@@ -33,11 +36,79 @@
         dispatch('memberSelected', id);
     }
 
-    function periodChanged(e) {
-        console.log("selected period: " + selectedPeriod);
-        $searchCriteriaStore.selectedPeriod = selectedPeriod;
+    function periodChanged() {
+        console.log("periodChanged " + $searchCriteriaStore.subscriptionPeriodId)
+        search($searchCriteriaStore);
     }
+
+    $: sortBy = $searchCriteriaStore.sortBy;
+
+    function changeSortBy(sortBy) {
+        if(sortBy == $searchCriteriaStore.sortBy) {
+            $searchCriteriaStore.sortAscending = !($searchCriteriaStore.sortAscending);
+        } else {
+            $searchCriteriaStore.sortBy = sortBy;
+        }
+        search($searchCriteriaStore)
+    }
+
 </script>
+
+<style>
+
+    h2.page-header {
+        margin-top: 0px;
+        padding-top: 0px;
+        line-height: 15px;
+        vertical-align: middle;
+    }
+
+    .table-sortable > thead > tr > th {
+        cursor: pointer;
+        position: relative;
+    }
+
+    .table-sortable > thead > tr > th:after,
+    .table-sortable > thead > tr > th:after,
+    .table-sortable > thead > tr > th:after {
+        content: ' ';
+        position: absolute;
+        height: 0;
+        width: 0;
+        right: 10px;
+        top: 16px;
+    }
+
+    .table-sortable > thead > tr > th:after {
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 5px solid #ccc;
+        border-bottom: 0px solid transparent;
+    }
+
+    .table-sortable > thead > tr > th:hover:after {
+        border-top: 5px solid #888;
+    }
+
+    .table-sortable > thead > tr > th.asc:after {
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 0px solid transparent;
+        border-bottom: 5px solid #333;
+    }
+    .table-sortable > thead > tr > th.asc:hover:after {
+        border-bottom: 5px solid #888;
+    }
+
+    .table-sortable > thead > tr > th.desc:after {
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 5px solid #333;
+        border-bottom: 5px solid transparent;
+    }
+
+
+</style>
 
 <div class="container mt-5">
 
@@ -52,12 +123,12 @@
             <div class="mb-3">
                 <label for="searchStringInput" class="form-label">Search String</label>
                 <input type="searchString" class="form-control" id="searchStringInput"
-                       on:keyup={({ target: { value } }) => debounce(value)} value={$searchCriteriaStore.term}>
+                       on:keyup={({ target: { value } }) => debounce(value)} value={$searchCriteriaStore.searchString}>
             </div>
             <div class="mb-3">
                 <label for="periodSelect" class="form-label">Period</label>
-                <select bind:value={$searchCriteriaStore.period} class="form-control" id="periodSelect">
-                    <option value="all">*</option>
+                <select bind:value={$searchCriteriaStore.subscriptionPeriodId} class="form-control" id="periodSelect" on:change|preventDefault={periodChanged}>
+                    <option value="">*</option>
                     {#each periods as period}
                         <option value="{period.id}">{period.name}</option>
                     {/each}
@@ -79,12 +150,12 @@
     {:then unusedValue}
         {#if $memberSearchResultStore}
 
-            <table class="table">
+            <table class="table table-sortable">
                 <thead>
                 <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Nachname</th>
-                    <th scope="col">Vorname</th>
+                    <th scope="col" on:click={e => changeSortBy('id')} class:desc={sortBy == 'id' && !$searchCriteriaStore.sortAscending} class:asc={sortBy == 'id' && $searchCriteriaStore.sortAscending}>#</th>
+                    <th scope="col" on:click={e => changeSortBy('lastNameOrCompanyName')} class:desc={sortBy == 'lastNameOrCompanyName' && !$searchCriteriaStore.sortAscending} class:asc={sortBy == 'lastNameOrCompanyName' && $searchCriteriaStore.sortAscending}>Nachname</th>
+                    <th scope="col" on:click={e => changeSortBy('firstName')} class:desc={sortBy == 'firstName' && !$searchCriteriaStore.sortAscending} class:asc={sortBy == 'firstName' && $searchCriteriaStore.sortAscending}>Vorname</th>
                     <th scope="col">Adresse</th>
                     <th scope="col">Typ</th>
                 </tr>

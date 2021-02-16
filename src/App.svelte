@@ -7,7 +7,7 @@
     import Navbar from "./Navbar.svelte";
     import Member from "./Member.svelte";
 
-    let noAuthMode = false;
+    let noAuthMode = true;
     let auth0Client;
     let state;
     let editMemberId;

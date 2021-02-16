@@ -1,7 +1,8 @@
 import {token, user} from "./store";
 
-const HOSTNAME = 'http://localhost:8081'
-//const HOSTNAME = 'https://loscaracoles.herokuapp.com'
+const API_BASE_URL = 'http://localhost:8081'
+//const API_BASE_URL = 'http://localhost:8080/api'
+//const API_BASE_PATH = 'https://loscaracoles.herokuapp.com/api'
 
 async function getToken() {
 
@@ -20,9 +21,11 @@ async function defaultHeaders() {
     }
 }
 
-export async function searchMembers(searchString) {
+export async function searchMembers(searchCriteria) {
 
-    const response = await fetch(HOSTNAME + `/members`, {
+    let queryParams = `?searchString=${searchCriteria.searchString}&subscriptionPeriodId=${searchCriteria.subscriptionPeriodId}&sortBy=${searchCriteria.sortBy}&sortAscending=${searchCriteria.sortAscending}`;
+
+    const response = await fetch(API_BASE_URL + `/members` + queryParams, {
         method: 'GET',
         headers: await defaultHeaders()
     });
@@ -33,7 +36,7 @@ export async function searchMembers(searchString) {
 export async function loadPeriods() {
     // const accessToken = await auth0Client.getTokenSilently();
     //
-    let response = await fetch(`http://localhost:8081/subscription-periods`, {
+    let response = await fetch(API_BASE_URL + `/subscription-periods`, {
         method: 'GET',
         headers: await defaultHeaders()
     });
@@ -45,7 +48,7 @@ export async function loadMember(memberId) {
     console.log("loading member: " + memberId)
     // const accessToken = await auth0Client.getTokenSilently();
     //
-    let response = await fetch(`http://localhost:8081/members/` + memberId, {
+    let response = await fetch(API_BASE_URL + `/members/` + memberId, {
         method: 'GET',
         headers: await defaultHeaders()
     });
@@ -56,7 +59,7 @@ export async function loadMember(memberId) {
 export async function loadPerson(id) {
     // const accessToken = await auth0Client.getTokenSilently();
     //
-    const response = await fetch(`http://localhost:8081/persons/` + id, {
+    const response = await fetch(API_BASE_URL + `/persons/` + id, {
         method: 'GET',
         headers: await defaultHeaders()
     });
