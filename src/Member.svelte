@@ -7,9 +7,9 @@
     let showMemberships = false;
 </script>
 
-<div class="container mt-5">
+<div class="container">
 
-    <h1>Member {id}</h1>
+    <h1>Member {id ? id : ""}</h1>
 
     <ul class="nav nav-tabs">
         <li class="nav-item">

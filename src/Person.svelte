@@ -16,6 +16,7 @@
 
     export let id;
 
+    let isNaturalPerson = true;
     let personPromise;
 
     let type = TYPES[0];
@@ -104,14 +105,14 @@
 
         <form on:submit|preventDefault={e => save()} class="row g-2" novalidate>
 
-            <div class="form-check col-md-6">
+            <div class="form-check col-md-12">
                 <input bind:group={type} value={TYPES[0]} class="form-check-input" type="radio" name="exampleRadios"
                        id="typeRadio0" disabled={id != undefined}>
                 <label class="form-check-label" for="typeRadio0">
                     {TYPES[0].viewValue}
                 </label>
             </div>
-            <div class="form-check col-md6">
+            <div class="form-check col-md-12">
                 <input bind:group={type} value={TYPES[1]} class="form-check-input" type="radio" name="exampleRadios"
                        id="typeRadio1" disabled={id != undefined}>
                 <label class="form-check-label" for="typeRadio1">
@@ -128,7 +129,7 @@
                     <label for="inputFirstName" class="form-label">First name</label>
                 </div>
             {/if}
-            <div class="form-floating col-md-6">
+            <div class="form-floating" class:col-md-6={isNaturalPerson} class:col-md-12={!isNaturalPerson}>
                 <input type="text" class="form-control" id="inputLastName"
                        bind:value={lastNameOrCompanyName}
                        use:bindClass={{ form: memberForm }}
@@ -171,14 +172,14 @@
             </div>
 
 
-            <div class="form-floating col-10">
+            <div class="form-floating col-8">
                 <input type="text" class="form-control" id="inputStreet"
                        bind:value={street}
                        use:bindClass={{ form: memberForm }}
                        class:is-invalid={!$memberForm.fields.street.valid}/>
                 <label for="inputStreet" class="form-label">Street</label>
             </div>
-            <div class="form-floating col-2">
+            <div class="form-floating col-4">
                 <input type="text" class="form-control" id="inputStreetNumber"
                        bind:value={streetNumber}
                        use:bindClass={{ form: memberForm }}
@@ -199,7 +200,7 @@
                        class:is-invalid={!$memberForm.fields.city.valid}/>
                 <label for="inputCity" class="form-label">City</label>
             </div>
-            <div class="form-floating col-8">
+            <div class="form-floating col-12">
                 <select bind:value={selectedCountry} class="form-control" id="inputCountry">
                     <option value=""></option>
                     {#each countries as country}

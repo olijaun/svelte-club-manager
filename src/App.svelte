@@ -7,8 +7,7 @@
     import Navbar from "./Navbar.svelte";
     import Member from "./Member.svelte";
 
-    let noAuthMode = true;
-    let auth0Client;
+true    let auth0Client;
     let state;
     let editMemberId;
 
@@ -26,6 +25,7 @@
         if (!noAuthMode) {
             auth.loginWithPopup(auth0Client);
         } else {
+            console.log("set to authenticated")
             isAuthenticated.set(true);
         }
     }
@@ -37,8 +37,12 @@
     }
 
     function logout() {
+        console.log("logout")
         if (!noAuthMode) {
             auth.logout(auth0Client);
+        }
+        else {
+             isAuthenticated.set(false);
         }
     }
 
@@ -76,7 +80,7 @@
         <Login on:login={login}/>
     {:else}
 
-        {#if state === "Search" }
+        {#if !state || state === "Search" }
             <Search on:memberSelected={editMember}/>
         {/if}
         {#if state === "Edit" }
