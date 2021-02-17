@@ -1,6 +1,7 @@
 <script>
     import Search from "./Search.svelte";
     import Member from "./Member.svelte";
+    import Admin from "./Admin.svelte";
     import {createEventDispatcher} from 'svelte';
 
     export let isAuthenticated;
@@ -11,6 +12,7 @@
     const navItems = [
         {page: 'Search', component: Search},
         {page: 'New Member', component: Member},
+        {page: 'Admin', component: Admin},
     ];
 
     let selectedItem = 0;

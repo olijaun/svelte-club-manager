@@ -17,7 +17,12 @@ function sleep(milliseconds) {
 }
 
 app.get("/members", (req, res) => {
-    res.send(members);
+    if(req.accepts().find('text/csv')) {
+        console.log("serving csv");
+        res.send(members);
+    } else {
+        res.send(members);
+    }
 });
 
 const subscriptionPeriods = {"subscriptionPeriods":[{"startDate":"2020-01-01","endDate":"2020-12-31","name":"Vereinsjahr 2020","description":"","id":"3","subscriptionTypes":[{"membershipTypeId":"0","name":"Ehrenmitgliedschaft 2020","amount":0.0,"currency":"CHF","maxSubscribers":1,"id":"0","subscriptionPeriodId":"3"},{"membershipTypeId":"1","name":"Normalmitgliedschaft 2020","amount":60.0,"currency":"CHF","maxSubscribers":1,"id":"1","subscriptionPeriodId":"3"},{"membershipTypeId":"2","name":"Einzelgönnermitgliedschaft 2020","amount":200.0,"currency":"CHF","maxSubscribers":1,"id":"2","subscriptionPeriodId":"3"},{"membershipTypeId":"2","name":"Doppelgönnermitgliedschaft 2020","amount":300.0,"currency":"CHF","maxSubscribers":1,"id":"4","subscriptionPeriodId":"3"}]},{"startDate":"2018-01-01","endDate":"2018-12-31","name":"Vereinsjahr 2018","description":"","id":"1","subscriptionTypes":[{"membershipTypeId":"0","name":"Ehrenmitgliedschaft 2018","amount":0.0,"currency":"CHF","maxSubscribers":1,"id":"0","subscriptionPeriodId":"1"},{"membershipTypeId":"1","name":"Normalmitgliedschaft 2018","amount":90.0,"currency":"CHF","maxSubscribers":1,"id":"1","subscriptionPeriodId":"1"},{"membershipTypeId":"2","name":"Gönnermitgliedschaft 2018","amount":250.0,"currency":"CHF","maxSubscribers":1,"id":"2","subscriptionPeriodId":"1"},{"membershipTypeId":"3","name":"Passivmitgliedschaft 2018","amount":20.0,"currency":"CHF","maxSubscribers":1,"id":"3","subscriptionPeriodId":"1"}]},{"startDate":"2019-01-01","endDate":"2019-12-31","name":"Vereinsjahr 2019","description":"","id":"2","subscriptionTypes":[{"membershipTypeId":"0","name":"Ehrenmitgliedschaft 2019","amount":0.0,"currency":"CHF","maxSubscribers":1,"id":"0","subscriptionPeriodId":"2"},{"membershipTypeId":"1","name":"Normalmitgliedschaft 2019","amount":60.0,"currency":"CHF","maxSubscribers":1,"id":"1","subscriptionPeriodId":"2"},{"membershipTypeId":"2","name":"Einzelgönnermitgliedschaft 2019","amount":200.0,"currency":"CHF","maxSubscribers":1,"id":"2","subscriptionPeriodId":"2"},{"membershipTypeId":"3","name":"Passivmitgliedschaft 2019","amount":20.0,"currency":"CHF","maxSubscribers":1,"id":"3","subscriptionPeriodId":"2"},{"membershipTypeId":"2","name":"Doppelgönnermitgliedschaft 2019","amount":300.0,"currency":"CHF","maxSubscribers":1,"id":"4","subscriptionPeriodId":"2"}]}]};

@@ -33,6 +33,18 @@ export async function searchMembers(searchCriteria) {
     return response.json();
 }
 
+export async function exportMembers() {
+    const response = await fetch(`${API_BASE_URL}/members?sortBy=lastNameOrCompanyName&subscriptionPeriodId=`, {
+        method: 'GET',
+        header: {
+            Accept: 'text/csv',
+            Authorization: `Bearer ${await getToken()}`
+        }
+    });
+
+    return response.json();
+}
+
 export async function loadPeriods() {
     // const accessToken = await auth0Client.getTokenSilently();
     //

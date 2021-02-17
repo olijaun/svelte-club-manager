@@ -6,6 +6,7 @@
     import Search from "./Search.svelte";
     import Navbar from "./Navbar.svelte";
     import Member from "./Member.svelte";
+    import Admin from "./Admin.svelte";
 
     let noAuthMode = true;
     let auth0Client;
@@ -52,6 +53,8 @@
             state = "New";
         } else if (event.detail === "Search") {
             state = "Search";
+        } else if (event.detail === "Admin") {
+            state = "Admin"
         }
     }
 
@@ -89,6 +92,9 @@
         {/if}
         {#if state === "New"}
             <Member/>
+        {/if}
+        {#if state === "Admin"}
+            <Admin/>
         {/if}
     {/if}
 </main>
