@@ -17,9 +17,9 @@ function sleep(milliseconds) {
 }
 
 app.get("/members", (req, res) => {
-    if(req.accepts().find('text/csv')) {
+    if(req.header("Accept") === "text/csv") {
         console.log("serving csv");
-        res.send(members);
+        res.header("Content-Type", "text/csv").send(members);
     } else {
         res.send(members);
     }
