@@ -1,6 +1,6 @@
 const config = {
     domain: "jaun.eu.auth0.com",
-    clientId: "HU1tU-ZW8kRv6ClV6pFmidjgJP3NGNle"
+    clientId: "WBHVb4wja4GIJlhtmqsU8H3pFVhVTlJl"
 };
 
 export default config;
