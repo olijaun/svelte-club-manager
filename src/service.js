@@ -1,7 +1,7 @@
 import {token, user} from "./store";
 
-const API_BASE_URL = 'http://localhost:8081'
-//const API_BASE_URL = 'http://localhost:8080/api'
+//const API_BASE_URL = 'http://localhost:8081'
+const API_BASE_URL = 'http://localhost:8080/api'
 //const API_BASE_PATH = 'https://loscaracoles.herokuapp.com/api'
 
 async function getToken() {
@@ -10,6 +10,7 @@ async function getToken() {
 
     await token.subscribe(t => {
         accessToken = t;
+        console.log("x bearer token is: " + JSON.stringify(accessToken))
     });
 
     return accessToken;

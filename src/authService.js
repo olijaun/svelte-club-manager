@@ -21,9 +21,9 @@ async function loginWithPopup(client, options) {
         await client.loginWithPopup(options);
 
         user.set(await client.getUser());
-        isAuthenticated.set(true);
-
         token.set(await client.getTokenSilently());
+        // make sure to set this after token.set()
+        isAuthenticated.set(true);
 
         console.log("raw token: " + token);
 

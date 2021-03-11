@@ -2,19 +2,30 @@
 
 ---
 
-# svelte app
-
-This is a project template for [Svelte](https://svelte.dev) apps. It lives at https://github.com/sveltejs/template.
-
-To create a new project based on this template using [degit](https://github.com/Rich-Harris/degit):
+# Run it
 
 ```bash
-npx degit sveltejs/template svelte-app
-cd svelte-app
+npm run dev
 ```
 
-*Note that you will need to have [Node.js](https://nodejs.org) installed.*
+Run mock backend:
+```bash
+cd api
+node app.js
+```
 
+change url accordingly in src/service.js (app.js runs on 8081)
+
+```javascript
+const API_BASE_URL = 'http://localhost:8081'
+//const API_BASE_URL = 'http://localhost:8080/api'
+```
+
+In order to turn of login (e.g. for mock api) do the following in App.svelte:
+```javascript
+    let noAuthMode = true;
+```
+This disables oauth stuff (no Bearer token will be sent to backend, no login performed)
 
 ## Get started
 
