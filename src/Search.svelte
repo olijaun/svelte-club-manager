@@ -11,6 +11,8 @@
     let periodsPromise = [];
     let selectedPeriod;
 
+    let sortBy;
+
     onMount(async () => {
         periodsPromise = loadPeriods().then(p => p.subscriptionPeriods);
     });
@@ -167,8 +169,8 @@
                     <tr on:click|preventDefault={e => memberSelected(member.id)}>
                         <th scope="row">{member.id}</th>
                         <td>{member.lastNameOrCompanyName}</td>
-                        <td>{member.firstName}</td>
-                        <td>{member.address}</td>
+                        <td>{#if member.firstName }{member.firstName}{/if}</td>
+                        <td>{#if member.address }{member.address}{/if}</td>
                         <td>
                             <ul>
                                 {#each member.subscriptions as subscription}

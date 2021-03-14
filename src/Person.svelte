@@ -2,7 +2,9 @@
     import {createEventDispatcher, onMount} from 'svelte';
     import {countries} from './countries'
     import {bindClass, form} from 'svelte-forms';
-    import {loadPerson} from './service'
+    import {updatePerson, createPerson, loadPerson, registerPersonId} from './service'
+    import { v4 as uuidv4 } from 'uuid';
+    import { DateTime } from 'luxon';
 
     let GENDERS = [
         {value: 'MALE', viewValue: 'male'},
@@ -33,6 +35,26 @@
     let zip;
     let city;
     let selectedCountry = countries.find(c => c.Code === "CH");
+
+    $: isNaturalPerson = type === TYPES[0];
+
+    const emailRule = value => ({valid: emailCheck(value), name: 'emailOrEmpty'})
+
+    const memberForm = form(() => ({
+        firstName: {value: firstName, validators: []},
+        lastNameOrCompanyName: {value: lastNameOrCompanyName, validators: ['required']},
+        birthdate: {value: birthdate, validators: []},
+        email: {value: email, validators: [emailRule]},
+        phone: {value: phone, validators: []},
+        street: {value: street, validators: []},
+        streetNumber: {value: streetNumber, validators: []},
+        zip: {value: zip, validators: []},
+        city: {value: city, validators: []}
+    }));
+
+    let submitDisabled;
+
+    $: submitDisabled = (!$memberForm.valid || !$memberForm.dirty);
 
     const dispatch = createEventDispatcher();
 
@@ -73,25 +95,52 @@
         return Boolean(val) && regex.test(val);
     }
 
-    $: isNaturalPerson = type === TYPES[0];
 
-    const emailRule = value => ({valid: emailCheck(value), name: 'emailOrEmpty'})
+    async function save() {
 
-    const memberForm = form(() => ({
-        firstName: {value: firstName, validators: []},
-        lastNameOrCompanyName: {value: lastNameOrCompanyName, validators: ['required']},
-        birthdate: {value: birthdate, validators: []},
-        email: {value: email, validators: [emailRule]},
-        phone: {value: phone, validators: []},
-        street: {value: street, validators: []},
-        streetNumber: {value: streetNumber, validators: []},
-        zip: {value: zip, validators: []},
-        city: {value: city, validators: []}
-    }));
+        memberForm.validate();
 
-    function save() {
+        if($memberForm.valid === false) {
+            console.log("invalid")
+            return;
+        }
 
-        console.log("save: " + $memberForm.valid)
+        let person = {
+            "type": type.value,
+            "basicData": {
+                "name": {
+                    "lastNameOrCompanyName": lastNameOrCompanyName,
+                    "firstName": firstName
+                },
+                "birthDate": birthdate,
+                "gender": null
+            },
+            "contactData": {
+                "phoneNumber": phone,
+                "emailAddress": email
+            }
+        };
+
+        if(street || streetNumber || zip || city) {
+            person.address = {
+                "street": street,
+                "streetNumber": streetNumber,
+                "zip": zip,
+                "city": city,
+                "country": selectedCountry.Code
+            };
+        }
+
+        if(!id) {
+            let personIdRequestId = uuidv4();
+            id = await registerPersonId(personIdRequestId);
+            await createPerson(id, personIdRequestId, person);
+        } else {
+            console.log("update person");
+            await updatePerson(id, person);
+        }
+
+        memberForm.reset();
     }
 </script>
 
@@ -210,7 +259,7 @@
                 <label for="inputCountry" class="form-label">Country</label>
             </div>
             <div class="col-12">
-                <button type="submit" class="btn btn-primary" disabled={!$memberForm.valid || !$memberForm.dirty}>Save
+                <button type="submit" class="btn btn-primary" disabled={submitDisabled}>Save
                 </button>
             </div>
         </form>

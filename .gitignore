@@ -4,6 +4,7 @@
 .DS_Store
 
 /app/node_modules
+/api/node_modules
 
 
 
