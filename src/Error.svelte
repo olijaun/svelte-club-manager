@@ -1,5 +1,9 @@
 <script>
     export let errorMessage;
+
+    $: {
+        console.log(errorMessage);
+    }
 </script>
 
 {#if errorMessage}

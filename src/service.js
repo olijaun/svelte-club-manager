@@ -1,7 +1,7 @@
 import {token, user} from "./store";
 
-const API_BASE_URL = 'http://localhost:8081'
-//const API_BASE_URL = 'http://localhost:8080/api'
+// const API_BASE_URL = 'http://localhost:8081'
+const API_BASE_URL = 'http://localhost:8080/api'
 //const API_BASE_PATH = 'https://loscaracoles.herokuapp.com/api'
 
 async function getToken() {

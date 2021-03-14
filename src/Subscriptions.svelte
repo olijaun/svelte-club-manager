@@ -6,8 +6,8 @@
 
     export let id;
 
-    let memberPromise;
-    let periodsPromise = [];
+    let memberPromise = Promise.resolve();
+    let periodsPromise = Promise.resolve();
 
     let selectedPeriod;
     let selectedSubscriptionType;

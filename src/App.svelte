@@ -8,7 +8,7 @@
     import Member from "./Member.svelte";
     import Admin from "./Admin.svelte";
 
-    let noAuthMode = true;
+    let noAuthMode = false;
     let auth0Client;
     let state;
     let editMemberId;

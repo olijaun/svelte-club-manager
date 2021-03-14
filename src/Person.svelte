@@ -33,7 +33,7 @@
 
     let selectedGender;
     let street;
-    let streetNumber;
+    let houseNumber;
     let zip;
     let city;
     let selectedCountry = countries.find(c => c.Code === "CH");
@@ -50,7 +50,7 @@
         email: {value: email, validators: [emailRule]},
         phone: {value: phone, validators: []},
         street: {value: street, validators: []},
-        streetNumber: {value: streetNumber, validators: []},
+        houseNumber: {value: houseNumber, validators: []},
         zip: {value: zip, validators: []},
         city: {value: city, validators: []},
         country: {value: selectedCountry}
@@ -67,19 +67,26 @@
                 firstName = m.basicData.name.firstName;
                 lastNameOrCompanyName = m.basicData.name.lastNameOrCompanyName;
                 birthdate = m.basicData.birthDate;
-                selectedGender = GENDERS.find(g => m.basicData.gender === g.value);
-                console.log(m.basicData.gender + ": gender: " + selectedGender.value);
-                // address
-                street = m.streetAddress.street;
+                if (m.basicData.gender) {
+                    selectedGender = GENDERS.find(g => m.basicData.gender === g.value);
+                }
 
-                streetNumber = m.streetAddress.houseNumber;
-                zip = m.streetAddress.zip;
-                city = m.streetAddress.city;
-                selectedCountry = countries.find(c => m.streetAddress.isoCountryCode === c.Code)
+                // address
+                if (m.streetAddress) {
+                    street = m.streetAddress.street;
+                    houseNumber = m.streetAddress.houseNumber;
+                    zip = m.streetAddress.zip;
+                    city = m.streetAddress.city;
+                    if (m.streetAddress.isoCountryCode) {
+                        selectedCountry = countries.find(c => m.streetAddress.isoCountryCode === c.Code)
+                    }
+                }
 
                 // contact data
-                email = m.contactData.emailAddress;
-                phone = m.contactData.phoneNumber;
+                if (m.contactData) {
+                    email = m.contactData.emailAddress;
+                    phone = m.contactData.phoneNumber;
+                }
 
                 // Don't forget to reset after loading
                 memberForm.reset();
@@ -99,6 +106,12 @@
         return Boolean(val) && regex.test(val);
     }
 
+    function empty2null(string) {
+        if(string === "") {
+            return null;
+        }
+        return string;
+    }
 
     async function save() {
 
@@ -107,7 +120,7 @@
         memberForm.validate();
 
         if ($memberForm.valid === false) {
-            console.log("invalid")
+            errorMessage = "invalid input";
             return;
         }
 
@@ -116,24 +129,24 @@
             "basicData": {
                 "name": {
                     "lastNameOrCompanyName": lastNameOrCompanyName,
-                    "firstName": firstName
+                    "firstName": empty2null(firstName)
                 },
                 "birthDate": birthdate,
                 "gender": selectedGender.value
             },
             "contactData": {
-                "phoneNumber": phone,
-                "emailAddress": email
+                "phoneNumber": empty2null(phone),
+                "emailAddress": empty2null(email)
             }
         };
 
-        if (street || streetNumber || zip || city) {
-            person.address = {
-                "street": street,
-                "streetNumber": streetNumber,
-                "zip": zip,
-                "city": city,
-                "country": selectedCountry.Code
+        if (street || houseNumber || zip || city) {
+            person.streetAddress = {
+                "street": empty2null(street),
+                "houseNumber": empty2null(houseNumber),
+                "zip": empty2null(zip),
+                "city": empty2null(city),
+                "isoCountryCode": selectedCountry.Code
             };
         }
 
@@ -240,11 +253,11 @@
                 <label for="inputStreet" class="form-label">Street</label>
             </div>
             <div class="form-floating col-4">
-                <input type="text" class="form-control" id="inputStreetNumber"
-                       bind:value={streetNumber}
+                <input type="text" class="form-control" id="inputHouseNumber"
+                       bind:value={houseNumber}
                        use:bindClass={{ form: memberForm }}
-                       class:is-invalid={!$memberForm.fields.streetNumber.valid}/>
-                <label for="inputStreetNumber" class="form-label">Nr.</label>
+                       class:is-invalid={!$memberForm.fields.houseNumber.valid}/>
+                <label for="inputHouseNumber" class="form-label">Nr.</label>
             </div>
             <div class="form-floating col-4">
                 <input type="text" class="form-control" id="inputZip"
