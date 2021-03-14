@@ -31,6 +31,8 @@ export async function searchMembers(searchCriteria) {
         headers: await defaultHeaders()
     });
 
+    handleErrors(response);
+
     return response.json();
 }
 
@@ -52,6 +54,8 @@ export async function loadPeriods() {
         headers: await defaultHeaders()
     });
 
+    handleErrors(response);
+
     return await response.json();
 }
 
@@ -64,7 +68,25 @@ export async function loadMember(memberId) {
         headers: await defaultHeaders()
     });
 
+    handleErrors(response);
+
     return await response.json();
+}
+
+export async function updateMember(memberId, member) {
+    console.log("loading member: " + memberId)
+    // const accessToken = await auth0Client.getTokenSilently();
+    //
+    let response = await fetch(API_BASE_URL + `/members/` + memberId, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': "application/json",
+            'Authorization': `Bearer ${await getToken()}`
+        },
+        body: JSON.stringify(member)
+    });
+
+    handleErrors(response);
 }
 
 export async function registerPersonId(id) {
@@ -76,7 +98,16 @@ export async function registerPersonId(id) {
         }
     });
 
+    handleErrors(response);
+
     return response.text();
+}
+
+function handleErrors(response) {
+    if (!response.ok) {
+        throw Error(response.statusText);
+    }
+    return response;
 }
 
 export async function updatePerson(personId, data) {
@@ -95,6 +126,9 @@ export async function updatePerson(personId, data) {
         referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
         body: JSON.stringify(data) // body data type must match "Content-Type" header
     });
+
+    handleErrors(response);
+
     return response.text();
 }
 
@@ -117,6 +151,9 @@ export async function createPerson(personId, personIdRequestId, data) {
         referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
         body: JSON.stringify(data) // body data type must match "Content-Type" header
     });
+
+    handleErrors(response);
+
     return response.text();
 }
 
@@ -127,6 +164,8 @@ export async function loadPerson(id) {
         method: 'GET',
         headers: await defaultHeaders()
     });
+
+    handleErrors(response);
 
     return response.json();
 }

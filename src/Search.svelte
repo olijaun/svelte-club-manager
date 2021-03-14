@@ -3,6 +3,7 @@
     import {memberSearchResultStore} from './stores';
     import {searchCriteriaStore} from './stores';
     import {loadPeriods, searchMembers} from './service'
+    import Error from "./Error.svelte";
 
     const dispatch = createEventDispatcher();
 
@@ -46,7 +47,7 @@
     $: sortBy = $searchCriteriaStore.sortBy;
 
     function changeSortBy(sortBy) {
-        if(sortBy == $searchCriteriaStore.sortBy) {
+        if (sortBy == $searchCriteriaStore.sortBy) {
             $searchCriteriaStore.sortAscending = !($searchCriteriaStore.sortAscending);
         } else {
             $searchCriteriaStore.sortBy = sortBy;
@@ -185,6 +186,6 @@
             </table>
         {/if}
     {:catch error}
-        <p>failed to search: {error}</p>
+        <Error errorMessage={error}/>
     {/await}
 </div>

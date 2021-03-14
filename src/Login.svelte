@@ -4,7 +4,6 @@
     const dispatch = createEventDispatcher();
 
     function login() {
-        console.log("guguuuuuuuuuuuuuuuuuuuuuuuuu");
         dispatch('login', {});
     }
 </script>

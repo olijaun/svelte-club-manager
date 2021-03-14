@@ -1,10 +1,12 @@
 <script>
     import {onMount} from 'svelte';
-    import { loadPeriods, loadMember } from './service'
+    import {updateMember, loadMember, loadPeriods} from './service'
+    import Error from "./Error.svelte";
+    import {v4 as uuidv4} from 'uuid';
 
     export let id;
 
-    let memberPromise = [];
+    let memberPromise;
     let periodsPromise = [];
 
     let selectedPeriod;
@@ -35,9 +37,18 @@
         });
     });
 
-    function addSubscription(subscriptionPeriodId, subscriptionTypeId) {
+    async function addSubscription(subscriptionPeriodId, subscriptionTypeId) {
 
-        let newSubscription = {"subscriptionPeriodId": subscriptionPeriodId, "subscriptionTypeId": subscriptionTypeId};
+        let newSubscription = {
+            "subscriptionPeriodId": subscriptionPeriodId,
+            "subscriptionTypeId": subscriptionTypeId,
+            "id": uuidv4(),
+            "memberId": id
+        };
+
+        let member = await memberPromise;
+
+        member.subscriptions = [...member.subscriptions, newSubscription];
 
         if (!displaySubscriptions.find(s => s.subscriptionPeriodId === subscriptionPeriodId && s.subscriptionTypeId === subscriptionTypeId)) {
             displaySubscriptions = [...displaySubscriptions, newSubscription];
@@ -46,8 +57,18 @@
         }
     }
 
-    function save() {
+    async function save() {
+        console.log("save stuff: " + JSON.stringify(unsavedSubscriptions));
 
+        let member = await memberPromise;
+
+        let updatedMember = {
+            "subscriptions": member.subscriptions
+        }
+
+        await updateMember(id, updatedMember);
+
+        unsavedSubscriptions = [];
     }
 
 </script>
@@ -113,7 +134,6 @@
             {:catch error}
                 <p>failed to load member data: {error}</p>
             {/await}
-
             <div class="col-12">
                 <button type="submit" class="btn btn-primary" disabled={unsavedSubscriptions.length === 0}>Save
                 </button>
@@ -122,7 +142,7 @@
 
     {:catch error}
 
-        <p>error loading: {error}</p>
+        <Error errorMessage={error}/>
 
     {/await}
 </div>

@@ -2,9 +2,9 @@
     import {createEventDispatcher, onMount} from 'svelte';
     import {countries} from './countries'
     import {bindClass, form} from 'svelte-forms';
-    import {updatePerson, createPerson, loadPerson, registerPersonId} from './service'
-    import { v4 as uuidv4 } from 'uuid';
-    import { DateTime } from 'luxon';
+    import {createPerson, loadPerson, registerPersonId, updatePerson} from './service'
+    import {v4 as uuidv4} from 'uuid';
+    import Error from "./Error.svelte";
 
     let GENDERS = [
         {value: 'MALE', viewValue: 'male'},
@@ -17,6 +17,8 @@
     ];
 
     export let id;
+
+    let errorMessage;
 
     let isNaturalPerson = true;
     let personPromise;
@@ -43,18 +45,16 @@
     const memberForm = form(() => ({
         firstName: {value: firstName, validators: []},
         lastNameOrCompanyName: {value: lastNameOrCompanyName, validators: ['required']},
+        gender: {value: selectedGender},
         birthdate: {value: birthdate, validators: []},
         email: {value: email, validators: [emailRule]},
         phone: {value: phone, validators: []},
         street: {value: street, validators: []},
         streetNumber: {value: streetNumber, validators: []},
         zip: {value: zip, validators: []},
-        city: {value: city, validators: []}
+        city: {value: city, validators: []},
+        country: {value: selectedCountry}
     }));
-
-    let submitDisabled;
-
-    $: submitDisabled = (!$memberForm.valid || !$memberForm.dirty);
 
     const dispatch = createEventDispatcher();
 
@@ -80,6 +80,10 @@
                 // contact data
                 email = m.contactData.emailAddress;
                 phone = m.contactData.phoneNumber;
+
+                // Don't forget to reset after loading
+                memberForm.reset();
+
             });
         } else {
             personPromise = Promise.resolve();
@@ -98,9 +102,11 @@
 
     async function save() {
 
+        errorMessage = null;
+
         memberForm.validate();
 
-        if($memberForm.valid === false) {
+        if ($memberForm.valid === false) {
             console.log("invalid")
             return;
         }
@@ -113,7 +119,7 @@
                     "firstName": firstName
                 },
                 "birthDate": birthdate,
-                "gender": null
+                "gender": selectedGender.value
             },
             "contactData": {
                 "phoneNumber": phone,
@@ -121,7 +127,7 @@
             }
         };
 
-        if(street || streetNumber || zip || city) {
+        if (street || streetNumber || zip || city) {
             person.address = {
                 "street": street,
                 "streetNumber": streetNumber,
@@ -131,16 +137,21 @@
             };
         }
 
-        if(!id) {
-            let personIdRequestId = uuidv4();
-            id = await registerPersonId(personIdRequestId);
-            await createPerson(id, personIdRequestId, person);
-        } else {
-            console.log("update person");
-            await updatePerson(id, person);
-        }
+        try {
+            if (!id) {
+                let personIdRequestId = uuidv4();
+                id = await registerPersonId(personIdRequestId);
+                await createPerson(id, personIdRequestId, person);
+            } else {
+                console.log("update person");
+                await updatePerson(id, person);
+            }
 
-        memberForm.reset();
+            memberForm.reset();
+
+        } catch (error) {
+            errorMessage = error;
+        }
     }
 </script>
 
@@ -258,15 +269,19 @@
                 </select>
                 <label for="inputCountry" class="form-label">Country</label>
             </div>
+            <div class="form-floating col-12">
+                <Error errorMessage={errorMessage}/>
+            </div>
             <div class="col-12">
-                <button type="submit" class="btn btn-primary" disabled={submitDisabled}>Save
+                <button type="submit" class="btn btn-primary" disabled={!$memberForm.valid || !$memberForm.dirty}>
+                    Save
                 </button>
             </div>
         </form>
 
     {:catch error}
 
-        <p>failed to load member {error}</p>
+        <Error errorMessage={error}/>
 
     {/await}
 </div>
