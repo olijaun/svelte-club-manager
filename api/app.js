@@ -45,6 +45,16 @@ app.put("/persons/*", (req, res) => {
    res.header("Content-Type", "text/plain").send("P00000042");
 });
 
+app.post("/persons", (req, res) => {
+    //res.status(500).send();
+    res.send("ok");
+});
+
+app.post("/members", (req, res) => {
+    //res.status(500).send();
+    res.send("ok");
+});
+
 const person = {"type":"NATURAL","basicData":{"name":{"lastNameOrCompanyName":"Jaun","firstName":"Oliver"},"birthDate":"1979-01-22","gender":"FEMALE"},"streetAddress":{"street":"Monbijoustrasse","houseNumber":"71","zip":"3007","city":"Bern","isoCountryCode":"DE","state":null},"contactData":{"phoneNumber":"++41786139713","emailAddress":"oliver@jaun.org"},"id":"P00000986"}
 
 app.get("/persons/P*", (req, res) => {

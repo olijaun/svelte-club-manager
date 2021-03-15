@@ -46,6 +46,16 @@ export async function exportMembers() {
     });
 }
 
+export async function exportPersons() {
+    return await fetch(`${API_BASE_URL}/persons`, {
+        method: 'GET',
+        headers: {
+            Accept: 'text/csv',
+            Authorization: `Bearer ${await getToken()}`
+        }
+    });
+}
+
 export async function loadPeriods() {
     // const accessToken = await auth0Client.getTokenSilently();
     //
@@ -71,6 +81,34 @@ export async function loadMember(memberId) {
     handleErrors(response);
 
     return await response.json();
+}
+
+export async function importPersonCsv(csv) {
+    let response = await fetch(API_BASE_URL + `/persons`, {
+        method: 'POST',
+        credentials: 'same-origin', // include, *same-origin, omit
+        headers: {
+            'Content-Type': "text/csv",
+            'Authorization': `Bearer ${await getToken()}`
+        },
+        body: csv
+    });
+
+    handleErrors(response);
+}
+
+export async function importMemberCsv(csv) {
+    let response = await fetch(API_BASE_URL + `/members`, {
+        method: 'POST',
+        credentials: 'same-origin', // include, *same-origin, omit
+        headers: {
+            'Content-Type': "text/csv",
+            'Authorization': `Bearer ${await getToken()}`
+        },
+        body: csv
+    });
+
+    handleErrors(response);
 }
 
 export async function updateMember(memberId, member) {
@@ -134,8 +172,6 @@ export async function updatePerson(personId, data) {
 
 export async function createPerson(personId, personIdRequestId, data) {
     console.log("creating person: " + personId)
-    // const accessToken = await auth0Client.getTokenSilently();
-    //
 
     const response = await fetch(API_BASE_URL + `/persons/` + personId, {
         method: 'PUT', // *GET, POST, PUT, DELETE, etc.
@@ -158,8 +194,6 @@ export async function createPerson(personId, personIdRequestId, data) {
 }
 
 export async function loadPerson(id) {
-    // const accessToken = await auth0Client.getTokenSilently();
-    //
     const response = await fetch(API_BASE_URL + `/persons/` + id, {
         method: 'GET',
         headers: await defaultHeaders()
