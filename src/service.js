@@ -4,6 +4,25 @@ import {token, user} from "./store";
 const API_BASE_URL = 'http://localhost:8080/api'
 //const API_BASE_PATH = 'https://loscaracoles.herokuapp.com/api'
 
+
+export async function isReady() {
+
+    try {
+
+        const response = await fetch(API_BASE_URL + `/readiness`, {
+            method: 'GET',
+        });
+
+        handleErrors(response);
+
+        return true;
+
+    } catch (error) {
+        // could occure if there is a network problem
+        return false;
+    }
+}
+
 async function getToken() {
 
     let accessToken = '';
@@ -95,6 +114,8 @@ export async function importPersonCsv(csv) {
     });
 
     handleErrors(response);
+
+    return response.json();
 }
 
 export async function importMemberCsv(csv) {
@@ -109,6 +130,8 @@ export async function importMemberCsv(csv) {
     });
 
     handleErrors(response);
+
+    return response.json();
 }
 
 export async function updateMember(memberId, member) {

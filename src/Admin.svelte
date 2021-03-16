@@ -44,10 +44,10 @@
 
     async function uploadPersons() {
         try {
-            await importPersonCsv(personCsvString);
+            let result = await importPersonCsv(personCsvString);
             importPersonMessage = {
                 type: 'success',
-                message: 'File was uploaded successfully'
+                message: 'File was uploaded successfully: ' + JSON.stringify(result)
             };
             personCsvString = null;
         } catch (e) {
@@ -60,10 +60,10 @@
 
     async function uploadMembers() {
         try {
-            await importMemberCsv(memberCsvString);
+            let result = await importMemberCsv(memberCsvString);
             importMemberMessage = {
                 type: 'success',
-                message: 'Member File was uploaded successfully'
+                message: 'Member File was uploaded successfully: ' + JSON.stringify(result)
             };
             memberCsvString = null;
         } catch (e) {

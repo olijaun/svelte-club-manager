@@ -4,6 +4,7 @@
     import {bindClass, form} from 'svelte-forms';
     import {createPerson, loadPerson, registerPersonId, updatePerson} from './service'
     import {v4 as uuidv4} from 'uuid';
+    import { isPossiblePhoneNumber, isValidPhoneNumber } from 'libphonenumber-js'
     import Error from "./Error.svelte";
 
     let GENDERS = [
@@ -40,7 +41,9 @@
 
     $: isNaturalPerson = type === TYPES[0];
 
-    const emailRule = value => ({valid: emailCheck(value), name: 'emailOrEmpty'})
+    const emailRule = value => ({valid: emailCheck(value), name: 'emailOrEmpty'});
+
+    const phoneRule = value => ({valid: phoneCheck(value), name: 'phoneOrEmpty'});
 
     const memberForm = form(() => ({
         firstName: {value: firstName, validators: []},
@@ -48,7 +51,7 @@
         gender: {value: selectedGender},
         birthdate: {value: birthdate, validators: []},
         email: {value: email, validators: [emailRule]},
-        phone: {value: phone, validators: []},
+        phone: {value: phone, validators: [phoneRule]},
         street: {value: street, validators: []},
         houseNumber: {value: houseNumber, validators: []},
         zip: {value: zip, validators: []},
@@ -106,6 +109,14 @@
         return Boolean(val) && regex.test(val);
     }
 
+    function phoneCheck(val) {
+        if (val === '' || val == undefined) {
+            return true;
+        }
+        console.log("is valid: " + selectedCountry.Code)
+        return isValidPhoneNumber(phone, selectedCountry.Code)
+    }
+
     function empty2null(string) {
         if(string === "") {
             return null;
@@ -128,7 +139,7 @@
             "type": type.value,
             "basicData": {
                 "name": {
-                    "lastNameOrCompanyName": lastNameOrCompanyName,
+                    "lastNameOrCompanyName": empty2null(lastNameOrCompanyName),
                     "firstName": empty2null(firstName)
                 },
                 "birthDate": birthdate,
