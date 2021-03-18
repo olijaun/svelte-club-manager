@@ -55,8 +55,11 @@ export async function searchMembers(searchCriteria) {
     return response.json();
 }
 
-export async function exportMembers() {
-    return await fetch(`${API_BASE_URL}/members?sortBy=lastNameOrCompanyName&subscriptionPeriodId=`, {
+export async function exportMembers(searchCriteria) {
+
+    let queryParams = `?searchString=${searchCriteria.searchString}&subscriptionPeriodId=${searchCriteria.subscriptionPeriodId}&sortBy=${searchCriteria.sortBy}&sortAscending=${searchCriteria.sortAscending}`;
+
+    return await fetch(API_BASE_URL + `/members` + queryParams, {
         method: 'GET',
         headers: {
             Accept: 'text/csv',

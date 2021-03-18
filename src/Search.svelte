@@ -2,8 +2,9 @@
     import {createEventDispatcher, onMount} from 'svelte';
     import {memberSearchResultStore} from './stores';
     import {searchCriteriaStore} from './stores';
-    import {loadPeriods, searchMembers} from './service'
+    import {exportMembers, loadPeriods, searchMembers} from './service'
     import Error from "./Error.svelte";
+    import {download} from './downloadhelper'
 
     const dispatch = createEventDispatcher();
 
@@ -53,6 +54,12 @@
             $searchCriteriaStore.sortBy = sortBy;
         }
         search($searchCriteriaStore)
+    }
+
+    async function downloadSearchResult() {
+        console.log("downloading...")
+
+        exportMembers($searchCriteriaStore).then(res => download('search-result.csv', res));
     }
 
 </script>
@@ -152,7 +159,7 @@
         <p>loading...</p>
     {:then unusedValue}
         {#if $memberSearchResultStore}
-
+            <a href="" on:click|preventDefault={e => downloadSearchResult()}>Download search result as CSV</a>
             <table class="table table-sortable">
                 <thead>
                 <tr>
@@ -184,6 +191,7 @@
 
                 </tbody>
             </table>
+
         {/if}
     {:catch error}
         <Error errorMessage={error}/>
