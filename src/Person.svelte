@@ -2,9 +2,10 @@
     import {createEventDispatcher, onMount} from 'svelte';
     import {countries} from './countries'
     import {bindClass, form} from 'svelte-forms';
-    import {createPerson, loadPerson, registerPersonId, updatePerson} from './service'
+    import {createPerson, loadPerson, registerPersonId, updatePerson} from './service';
     import {v4 as uuidv4} from 'uuid';
-    import { isPossiblePhoneNumber, isValidPhoneNumber } from 'libphonenumber-js'
+    import { isPossiblePhoneNumber, isValidPhoneNumber } from 'libphonenumber-js';
+    import {_} from './services/i18n';
     import Error from "./Error.svelte";
 
     let GENDERS = [
@@ -13,8 +14,8 @@
     ];
 
     let TYPES = [
-        {value: 'NATURAL', viewValue: 'natural-person'},
-        {value: 'JURISTIC', viewValue: 'juristic-person'}
+        {value: 'NATURAL', viewValue: $_('person.naturalPerson')},
+        {value: 'JURISTIC', viewValue: $_('person.juristicPerson')}
     ];
 
     export let id;
@@ -210,7 +211,7 @@
                            bind:value={firstName}
                            use:bindClass={{ form: memberForm }}
                            class:is-invalid={!$memberForm.fields.firstName.valid}/>
-                    <label for="inputFirstName" class="form-label">First name</label>
+                    <label for="inputFirstName" class="form-label">{$_('person.firstName')}</label>
                 </div>
             {/if}
             <div class="form-floating" class:col-md-6={isNaturalPerson} class:col-md-12={!isNaturalPerson}>
@@ -218,7 +219,7 @@
                        bind:value={lastNameOrCompanyName}
                        use:bindClass={{ form: memberForm }}
                        class:is-invalid={!$memberForm.fields.lastNameOrCompanyName.valid}/>
-                <label for="inputLastName" class="form-label">{isNaturalPerson ? "Last name" : "Company Name"}</label>
+                <label for="inputLastName" class="form-label">{isNaturalPerson ? $_('person.firstName') : $_('person.companyName')}</label>
             </div>
             {#if isNaturalPerson}
                 <div class="form-floating col-md-6">
@@ -226,7 +227,7 @@
                            bind:value={birthdate}
                            use:bindClass={{ form: memberForm }}
                            class:is-invalid={!$memberForm.fields.birthdate.valid}/>
-                    <label for="inputBirthday" class="form-label">Birthday</label>
+                    <label for="inputBirthday" class="form-label">{$_('person.birthday')}</label>
                 </div>
 
                 <div class="form-floating col-md-6">
@@ -236,7 +237,7 @@
                             <option value="{gender}">{gender.viewValue}</option>
                         {/each}
                     </select>
-                    <label for="periodSelect" class="form-label">Gender</label>
+                    <label for="periodSelect" class="form-label">{$_('person.gender')}</label>
                 </div>
             {/if}
 
@@ -245,14 +246,14 @@
                        bind:value={email}
                        use:bindClass={{ form: memberForm }}
                        class:is-invalid={!$memberForm.fields.email.valid}/>
-                <label for="inputEmail" class="form-label">Email</label>
+                <label for="inputEmail" class="form-label">{$_('person.email')}</label>
             </div>
             <div class="form-floating col-md-6">
                 <input type="text" class="form-control" id="inputPhone"
                        bind:value={phone}
                        use:bindClass={{ form: memberForm }}
                        class:is-invalid={!$memberForm.fields.phone.valid}/>
-                <label for="inputPhone" class="form-label">Phone</label>
+                <label for="inputPhone" class="form-label">{$_('person.phone')}</label>
             </div>
 
 
@@ -261,28 +262,28 @@
                        bind:value={street}
                        use:bindClass={{ form: memberForm }}
                        class:is-invalid={!$memberForm.fields.street.valid}/>
-                <label for="inputStreet" class="form-label">Street</label>
+                <label for="inputStreet" class="form-label">{$_('person.street')}</label>
             </div>
             <div class="form-floating col-4">
                 <input type="text" class="form-control" id="inputHouseNumber"
                        bind:value={houseNumber}
                        use:bindClass={{ form: memberForm }}
                        class:is-invalid={!$memberForm.fields.houseNumber.valid}/>
-                <label for="inputHouseNumber" class="form-label">Nr.</label>
+                <label for="inputHouseNumber" class="form-label">{$_('person.houseNumber')}</label>
             </div>
             <div class="form-floating col-4">
                 <input type="text" class="form-control" id="inputZip"
                        bind:value={zip}
                        use:bindClass={{ form: memberForm }}
                        class:is-invalid={!$memberForm.fields.zip.valid}/>
-                <label for="inputZip" class="form-label">Zip</label>
+                <label for="inputZip" class="form-label">{$_('person.zip')}</label>
             </div>
             <div class="form-floating col-8">
                 <input type="text" class="form-control" id="inputCity"
                        bind:value={city}
                        use:bindClass={{ form: memberForm }}
                        class:is-invalid={!$memberForm.fields.city.valid}/>
-                <label for="inputCity" class="form-label">City</label>
+                <label for="inputCity" class="form-label">{$_('person.city')}</label>
             </div>
             <div class="form-floating col-12">
                 <select bind:value={selectedCountry} class="form-control" id="inputCountry">
@@ -291,14 +292,14 @@
                         <option value="{country}">{country.Name}</option>
                     {/each}
                 </select>
-                <label for="inputCountry" class="form-label">Country</label>
+                <label for="inputCountry" class="form-label">{$_('person.country')}</label>
             </div>
             <div class="form-floating col-12">
                 <Error errorMessage={errorMessage}/>
             </div>
             <div class="col-12">
                 <button type="submit" class="btn btn-primary" disabled={!$memberForm.valid || !$memberForm.dirty}>
-                    Save
+                    {$_('common.save')}
                 </button>
             </div>
         </form>

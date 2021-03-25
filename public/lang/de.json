@@ -1,0 +1,44 @@
+{
+  "nav": {
+    "search": "Suche",
+    "createMember": "Mitglied erfassen",
+    "admin": "Admin"
+  },
+  "common": {
+    "login": "Anmelden",
+    "logoff": "Abmelden",
+    "save": "Speichern",
+    "add": "Hinzufügen"
+  },
+  "search": {
+    "term": "Suchbegriff",
+    "period": "Mitgliedschafts-Periode"
+  },
+  "member": {
+    "title": "Mitglied"
+  },
+  "subscriptions": {
+    "title": "Mitgliedschaften",
+    "period": "Periode",
+    "type": "Typ"
+  },
+  "person": {
+    "title": "Personenangaben",
+    "naturalPerson": "Natürliche Person",
+    "juristicPerson": "Juristische Person",
+    "person": "Person",
+    "firstName": "Vorname",
+    "lastName": "Nachname",
+    "companyName": "Firmenname",
+    "birthday": "Geburtstag",
+    "gender": "Geschlecht",
+    "email": "Email",
+    "phone": "Telefon",
+    "street": "Strasse",
+    "houseNumber": "Nr.",
+    "zip": "Postleitzahl",
+    "city": "Ort",
+    "state": "Staat",
+    "country": "Land"
+  }
+}

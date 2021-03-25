@@ -5,6 +5,7 @@
     import {exportMembers, loadPeriods, searchMembers} from './service'
     import Error from "./Error.svelte";
     import {download} from './downloadhelper'
+    import {_} from './services/i18n'
 
     const dispatch = createEventDispatcher();
 
@@ -131,12 +132,12 @@
         {#if $searchCriteriaStore}
 
             <div class="mb-3">
-                <label for="searchStringInput" class="form-label">Search String</label>
+                <label for="searchStringInput" class="form-label">{$_('search.term')}</label>
                 <input type="searchString" class="form-control" id="searchStringInput"
                        on:keyup={({ target: { value } }) => debounce(value)} value={$searchCriteriaStore.searchString}>
             </div>
             <div class="mb-3">
-                <label for="periodSelect" class="form-label">Period</label>
+                <label for="periodSelect" class="form-label">{$_('search.period')}</label>
                 <select bind:value={$searchCriteriaStore.subscriptionPeriodId} class="form-control" id="periodSelect" on:change|preventDefault={periodChanged}>
                     <option value="">*</option>
                     {#each periods as period}

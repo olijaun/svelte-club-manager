@@ -144,7 +144,7 @@
     </div>
     <div class="card text-left">
         <div class="card-header">
-            Export Person CSV
+            Export Member CSV
         </div>
         <div class="card-body">
             <button type="button" class="btn btn-primary md-2" on:click|preventDefault={downloadMemberExport}>Download

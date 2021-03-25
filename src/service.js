@@ -106,7 +106,7 @@ export async function loadMember(memberId) {
 }
 
 export async function importPersonCsv(csv) {
-    let response = await fetch(API_BASE_URL + `/persons`, {
+    let response = await fetch(API_BASE_URL + `/person-bulk-import`, {
         method: 'POST',
         credentials: 'same-origin', // include, *same-origin, omit
         headers: {
@@ -122,7 +122,7 @@ export async function importPersonCsv(csv) {
 }
 
 export async function importMemberCsv(csv) {
-    let response = await fetch(API_BASE_URL + `/members`, {
+    let response = await fetch(API_BASE_URL + `/member-bulk-import`, {
         method: 'POST',
         credentials: 'same-origin', // include, *same-origin, omit
         headers: {

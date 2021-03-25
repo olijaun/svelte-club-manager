@@ -3,6 +3,7 @@
     import {updateMember, loadMember, loadPeriods} from './service'
     import Error from "./Error.svelte";
     import {v4 as uuidv4} from 'uuid';
+    import {_} from './services/i18n';
 
     export let id;
 
@@ -89,7 +90,7 @@
                         <option value="{period}">{period.name}</option>
                     {/each}
                 </select>
-                <label for="periodSelect" class="form-label">Period</label>
+                <label for="periodSelect" class="form-label">{$_('subscriptions.period')}</label>
             </div>
 
             <div class="form-floating col-md-6">
@@ -101,13 +102,13 @@
                         {/each}
                     {/if}
                 </select>
-                <label for="membershipTypeSelect" class="form-label">Type</label>
+                <label for="membershipTypeSelect" class="form-label">{$_('subscriptions.type')}</label>
             </div>
             <div class="col-12">
                 <button class="btn btn-primary"
                         on:click={addSubscription(selectedPeriod.id, selectedSubscriptionType.id)}
                         disabled={(!selectedPeriod && !selectedSubscriptionType) || displaySubscriptions.find(s => s.subscriptionPeriodId === selectedPeriod.id && s.subscriptionTypeId === selectedSubscriptionType.id) }>
-                    Add
+                    {$_('common.add')}
                 </button>
             </div>
 
@@ -116,8 +117,8 @@
                 <table class="table">
                     <thead>
                     <tr>
-                        <th scope="col">Period</th>
-                        <th scope="col">Type</th>
+                        <th scope="col">{$_('subscriptions.period')}</th>
+                        <th scope="col">{$_('subscriptions.type')}</th>
                     </tr>
                     </thead>
 
@@ -135,7 +136,7 @@
                 <p>failed to load member data: {error}</p>
             {/await}
             <div class="col-12">
-                <button type="submit" class="btn btn-primary" disabled={unsavedSubscriptions.length === 0}>Save
+                <button type="submit" class="btn btn-primary" disabled={unsavedSubscriptions.length === 0}>{$_('common.save')}
                 </button>
             </div>
         </form>

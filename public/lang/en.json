@@ -1,0 +1,44 @@
+{
+  "nav": {
+    "search": "Search",
+    "createMember": "Create Member",
+    "admin": "Admin"
+  },
+  "common": {
+    "login": "Login",
+    "logoff": "Logoff",
+    "save": "Save",
+    "add": "Add"
+  },
+  "search": {
+    "term": "Search term",
+    "period": "Subscription period"
+  },
+  "member": {
+    "title": "Member"
+  },
+  "subscriptions": {
+    "title": "Subscriptions",
+    "period": "Period",
+    "type": "Type"
+  },
+  "person": {
+    "title": "Person data",
+    "naturalPerson": "Natural Person",
+    "juristicPerson": "Juristic Person",
+    "person": "Person",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "companyName": "Company name",
+    "birthday": "Birth day",
+    "gender": "Gender",
+    "email": "Email",
+    "phone": "Phone",
+    "street": "Street",
+    "houseNumber": "Number",
+    "zip": "Postal Code",
+    "city": "City",
+    "state": "State",
+    "country": "Country"
+  }
+}

@@ -3,11 +3,13 @@
     import auth from "./authService";
     import {isReady} from './service'
     import {isAuthenticated, user} from "./store";
+    import {isLocaleLoaded, locale, changeLanguageTo, initI18n} from './services/i18n';
     import Login from "./Login.svelte";
     import Search from "./Search.svelte";
     import Navbar from "./Navbar.svelte";
     import Member from "./Member.svelte";
     import Admin from "./Admin.svelte";
+    import LocaleSwitcher from "./components/controllers/LocaleSwitcher.svelte";
 
     let backendReady = false;
     let backendFailure = false;
@@ -17,6 +19,8 @@
     let editMemberId;
 
     onMount(async () => {
+
+        initI18n();
 
         if (!noAuthMode) {
             auth0Client = await auth.createClient();
@@ -74,11 +78,11 @@
     }
 
     function select(event) {
-        if (event.detail === "New Member") {
+        if (event.detail === "createMember") {
             state = "New";
-        } else if (event.detail === "Search") {
+        } else if (event.detail === "search") {
             state = "Search";
-        } else if (event.detail === "Admin") {
+        } else if (event.detail === "admin") {
             state = "Admin"
         }
     }
@@ -93,41 +97,50 @@
 
 <main>
 
-    <Navbar on:componentSelected={select} on:login={login} on:logout={logout} isAuthenticated={isAuthenticated}
-            user={user}/>
-    <div class="container">
-        {#if backendReady}
+    {#if $isLocaleLoaded}
 
-            <!-- Application -->
-            {#if !$isAuthenticated}
-                <Login on:login={login}/>
-            {:else}
+        <Navbar on:componentSelected={select} on:login={login} on:logout={logout} isAuthenticated={isAuthenticated}
+                user={user}/>
 
-                {#if !state || state === "Search" }
-                    <Search on:memberSelected={editMember}/>
-                {/if}
-                {#if state === "Edit" }
-                    <Member id={editMemberId}/>
-                {/if}
-                {#if state === "New"}
-                    <Member/>
-                {/if}
-                {#if state === "Admin"}
-                    <Admin/>
-                {/if}
-            {/if}
+        <div class="container">
+            {#if backendReady}
 
-        {:else if !backendFailure}
-            Waiting for backend
-            <div class="d-flex justify-content-center">
-                <div class="spinner-border" role="status">
-                    <span class="visually-hidden">Loading...</span>
+                <!-- Application -->
+                {#if !$isAuthenticated}
+                    <Login on:login={login}/>
+                {:else}
+
+                    {#if !state || state === "Search" }
+                        <Search on:memberSelected={editMember}/>
+                    {/if}
+                    {#if state === "Edit" }
+                        <Member id={editMemberId}/>
+                    {/if}
+                    {#if state === "New"}
+                        <Member/>
+                    {/if}
+                    {#if state === "Admin"}
+                        <Admin/>
+                    {/if}
+                {/if}
+
+            {:else if !backendFailure}
+                Waiting for backend
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
                 </div>
-            </div>
-        {:else}
-            Backend failure.
-            <button type="button" class="btn btn-primary md-2" on:click|preventDefault={e => scheduleBackendCheck()}>Retry
-            </button>
-        {/if}
-    </div>
+            {:else}
+                Backend failure.
+                <button type="button" class="btn btn-primary md-2"
+                        on:click|preventDefault={e => scheduleBackendCheck()}>
+                    Retry
+                </button>
+            {/if}
+        </div>
+    {:else}
+        loading locale...
+    {/if}
+
 </main>
