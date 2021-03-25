@@ -2,6 +2,7 @@
     import {createEventDispatcher} from 'svelte';
     import {_, changeLanguageTo, isLocaleLoaded, locale} from '../services/i18n';
     import LocaleSwitcher from "./controllers/LocaleSwitcher.svelte";
+    import NavLink from "./controllers/NavLink.svelte";
 
     export let isAuthenticated;
     export let user;
@@ -14,8 +15,6 @@
         {page: $_('nav.admin'), id: 'admin'},
     ];
 
-    let selectedItem = 0;
-
     function login() {
         dispatch('login', {});
     }
@@ -23,12 +22,6 @@
     function logout() {
         console.log("dispatching logout")
         dispatch('logout', {});
-    }
-
-    function componentSelected(i) {
-        selectedItem = i;
-        console.log("selectedItem: " + i)
-        dispatch('componentSelected', navItems[i].id);
     }
 
 </script>
@@ -48,12 +41,15 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     {#if $isAuthenticated}
-                        {#each navItems as item, i}
-                            <li class="nav-link">
-                                <a href="/#" class="nav-link p-2 ml-1" class:active={selectedItem===i}
-                                   on:click|preventDefault="{e => componentSelected(i)}">{item.page}</a>
-                            </li>
-                        {/each}
+                        <li class="nav-link">
+                            <NavLink baseClass="nav-link p-2 ml-1" to="/">{$_('nav.search')}</NavLink>
+                        </li>
+                        <li class="nav-link">
+                            <NavLink baseClass="nav-link p-2 ml-1" to="/member">{$_('nav.createMember')}</NavLink>
+                        </li>
+                        <li class="nav-link">
+                            <NavLink baseClass="nav-link p-2 ml-1" to="/admin">{$_('nav.admin')}</NavLink>
+                        </li>
                     {/if}
                     <LocaleSwitcher
                             value={$locale}

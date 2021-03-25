@@ -1,14 +1,18 @@
 <script>
+    import {Route, Router} from "svelte-routing";
     import {onMount} from "svelte";
     import auth from "./services/authService";
     import {isReady} from './services/personService'
     import {isAuthenticated, user} from "./services/stores";
-    import {isLocaleLoaded, initI18n} from './services/i18n';
+    import {initI18n, isLocaleLoaded} from './services/i18n';
     import Login from "./components/Login.svelte";
     import Search from "./components/Search.svelte";
     import Navbar from "./components/Navbar.svelte";
     import Member from "./components/Member.svelte";
     import Admin from "./components/Admin.svelte";
+    import { navigate } from "svelte-routing";
+
+    export let url = "";
 
     let backendReady = false;
     let backendFailure = false;
@@ -60,8 +64,10 @@
     }
 
     function editMember(id) {
+        console.log("hello.......................................")
         state = 'Edit';
         editMemberId = id.detail;
+        navigate("/member", { replace: true });
     }
 
     function logout() {
@@ -95,48 +101,50 @@
 
     {#if $isLocaleLoaded}
 
-        <Navbar on:componentSelected={select} on:login={login} on:logout={logout} isAuthenticated={isAuthenticated}
-                user={user}/>
+        <Router url="{url}">
+            <Navbar on:componentSelected={select} on:login={login} on:logout={logout} isAuthenticated={isAuthenticated}
+                    user={user}/>
 
-        <div class="container">
-            {#if backendReady}
+            <div class="container">
+                {#if backendReady}
 
-                <!-- Application -->
-                {#if !$isAuthenticated}
-                    <Login on:login={login}/>
-                {:else}
+                    <!-- Application -->
+                    {#if !$isAuthenticated}
+                        <Login on:login={login}/>
+                    {:else}
+                        <Route path="/">
+                            <Search on:memberSelected={editMember}/>
+                        </Route>
+<!--                        <Route path="/search">-->
+<!--                            <Search on:memberSelected={editMember}/>-->
+<!--                        </Route>-->
+                        <Route path="member">
+                            <Member id={editMemberId}/>
+                        </Route>
+                        <Route path="admin">
+                            <Admin/>
+                        </Route>
+                    {/if}
 
-                    {#if !state || state === "Search" }
-                        <Search on:memberSelected={editMember}/>
-                    {/if}
-                    {#if state === "Edit" }
-                        <Member id={editMemberId}/>
-                    {/if}
-                    {#if state === "New"}
-                        <Member/>
-                    {/if}
-                    {#if state === "Admin"}
-                        <Admin/>
-                    {/if}
-                {/if}
-
-            {:else if !backendFailure}
-                Waiting for backend
-                <div class="d-flex justify-content-center">
-                    <div class="spinner-border" role="status">
-                        <span class="visually-hidden">Loading...</span>
+                {:else if !backendFailure}
+                    Waiting for backend
+                    <div class="d-flex justify-content-center">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
                     </div>
-                </div>
-            {:else}
-                Backend failure.
-                <button type="button" class="btn btn-primary md-2"
-                        on:click|preventDefault={e => scheduleBackendCheck()}>
-                    Retry
-                </button>
-            {/if}
-        </div>
+                {:else}
+                    Backend failure.
+                    <button type="button" class="btn btn-primary md-2"
+                            on:click|preventDefault={e => scheduleBackendCheck()}>
+                        Retry
+                    </button>
+                {/if}
+            </div>
+
+
+        </Router>
     {:else}
         loading locale...
     {/if}
-
 </main>
