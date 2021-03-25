@@ -1,7 +1,8 @@
 <script>
     import {onMount} from 'svelte';
-    import {exportMembers, exportPersons, importPersonCsv, importMemberCsv} from './service'
-    import {download} from './downloadhelper'
+    import {exportPersons, importPersonCsv} from '../services/personService'
+    import {exportMembers, importMemberCsv} from '../services/memberService'
+    import {download} from '../services/downloadhelper'
     import Message from "./Message.svelte";
 
     let personFileInput;

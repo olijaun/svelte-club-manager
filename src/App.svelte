@@ -1,15 +1,14 @@
 <script>
     import {onMount} from "svelte";
-    import auth from "./authService";
-    import {isReady} from './service'
-    import {isAuthenticated, user} from "./store";
-    import {isLocaleLoaded, locale, changeLanguageTo, initI18n} from './services/i18n';
-    import Login from "./Login.svelte";
-    import Search from "./Search.svelte";
-    import Navbar from "./Navbar.svelte";
-    import Member from "./Member.svelte";
-    import Admin from "./Admin.svelte";
-    import LocaleSwitcher from "./components/controllers/LocaleSwitcher.svelte";
+    import auth from "./services/authService";
+    import {isReady} from './services/personService'
+    import {isAuthenticated, user} from "./services/stores";
+    import {isLocaleLoaded, initI18n} from './services/i18n';
+    import Login from "./components/Login.svelte";
+    import Search from "./components/Search.svelte";
+    import Navbar from "./components/Navbar.svelte";
+    import Member from "./components/Member.svelte";
+    import Admin from "./components/Admin.svelte";
 
     let backendReady = false;
     let backendFailure = false;
@@ -47,13 +46,11 @@
                 setTimeout(() => checkBackend(totalRetryTime), 2000);
             }
         } else {
-            console.log("backend ffffffffffffffffffffffffffffff")
             backendFailure = true;
         }
     }
 
     function login() {
-        console.log("my login");
         if (!noAuthMode) {
             auth.loginWithPopup(auth0Client);
         } else {
@@ -63,7 +60,6 @@
     }
 
     function editMember(id) {
-        console.log("edit!!!!! " + id.detail)
         state = 'Edit';
         editMemberId = id.detail;
     }

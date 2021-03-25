@@ -1,11 +1,11 @@
 <script>
     import {createEventDispatcher, onMount} from 'svelte';
-    import {memberSearchResultStore} from './stores';
-    import {searchCriteriaStore} from './stores';
-    import {exportMembers, loadPeriods, searchMembers} from './service'
+    import {memberSearchResultStore} from '../services/stores';
+    import {searchCriteriaStore} from '../services/stores';
+    import {exportMembers, loadPeriods, searchMembers} from '../services/memberService'
     import Error from "./Error.svelte";
-    import {download} from './downloadhelper'
-    import {_} from './services/i18n'
+    import {download} from '../services/downloadhelper'
+    import {_} from '../services/i18n'
 
     const dispatch = createEventDispatcher();
 

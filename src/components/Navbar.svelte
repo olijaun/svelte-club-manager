@@ -1,10 +1,7 @@
 <script>
-    import Search from "./Search.svelte";
-    import Member from "./Member.svelte";
-    import Admin from "./Admin.svelte";
     import {createEventDispatcher} from 'svelte';
-    import {_, changeLanguageTo, isLocaleLoaded, locale} from './services/i18n';
-    import LocaleSwitcher from "./components/controllers/LocaleSwitcher.svelte";
+    import {_, changeLanguageTo, isLocaleLoaded, locale} from '../services/i18n';
+    import LocaleSwitcher from "./controllers/LocaleSwitcher.svelte";
 
     export let isAuthenticated;
     export let user;

@@ -13,14 +13,7 @@
 </script>
 
 <style>
-    .choose-locale {
-        display: flex;
-        justify-content: center;
-    }
 
-    .select {
-        margin: 0 1rem 1rem;
-    }
 </style>
 
 <div class="choose-locale">

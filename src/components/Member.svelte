@@ -1,7 +1,7 @@
 <script>
     import Person from "./Person.svelte";
     import Subscriptions from "./Subscriptions.svelte";
-    import {_} from './services/i18n';
+    import {_} from '../services/i18n';
 
     export let id;
 

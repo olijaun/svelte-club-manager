@@ -1,6 +1,6 @@
 import createAuth0Client from "@auth0/auth0-spa-js";
-import { token, user, isAuthenticated, popupOpen } from "./store";
-import config from "../auth_config";
+import { token, user, isAuthenticated, popupOpen } from "./stores";
+import config from "../../auth_config";
 
 // see https://auth0.com/blog/authenticating-svelte-apps/
 

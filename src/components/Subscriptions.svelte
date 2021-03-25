@@ -1,9 +1,9 @@
 <script>
     import {onMount} from 'svelte';
-    import {updateMember, loadMember, loadPeriods} from './service'
+    import {loadPeriods, updateMember, loadMember} from '../services/memberService'
     import Error from "./Error.svelte";
     import {v4 as uuidv4} from 'uuid';
-    import {_} from './services/i18n';
+    import {_} from '../services/i18n';
 
     export let id;
 

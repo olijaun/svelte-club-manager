@@ -14,7 +14,7 @@ cd api
 node app.js
 ```
 
-change url accordingly in src/service.js (app.js runs on 8081)
+change url accordingly in src/personService.js (app.js runs on 8081)
 
 ```javascript
 const API_BASE_URL = 'http://localhost:8081'

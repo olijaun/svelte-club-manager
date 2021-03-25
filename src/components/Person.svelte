@@ -1,11 +1,11 @@
 <script>
     import {createEventDispatcher, onMount} from 'svelte';
-    import {countries} from './countries'
+    import {countries} from '../services/countries'
     import {bindClass, form} from 'svelte-forms';
-    import {createPerson, loadPerson, registerPersonId, updatePerson} from './service';
+    import {createPerson, loadPerson, registerPersonId, updatePerson} from '../services/personService';
     import {v4 as uuidv4} from 'uuid';
     import { isPossiblePhoneNumber, isValidPhoneNumber } from 'libphonenumber-js';
-    import {_} from './services/i18n';
+    import {_} from '../services/i18n';
     import Error from "./Error.svelte";
 
     let GENDERS = [
@@ -219,7 +219,7 @@
                        bind:value={lastNameOrCompanyName}
                        use:bindClass={{ form: memberForm }}
                        class:is-invalid={!$memberForm.fields.lastNameOrCompanyName.valid}/>
-                <label for="inputLastName" class="form-label">{isNaturalPerson ? $_('person.firstName') : $_('person.companyName')}</label>
+                <label for="inputLastName" class="form-label">{isNaturalPerson ? $_('person.lastName') : $_('person.companyName')}</label>
             </div>
             {#if isNaturalPerson}
                 <div class="form-floating col-md-6">
