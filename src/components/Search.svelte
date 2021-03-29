@@ -165,10 +165,10 @@
                 <thead>
                 <tr>
                     <th scope="col" on:click={e => changeSortBy('id')} class:desc={sortBy == 'id' && !$searchCriteriaStore.sortAscending} class:asc={sortBy == 'id' && $searchCriteriaStore.sortAscending}>#</th>
-                    <th scope="col" on:click={e => changeSortBy('lastNameOrCompanyName')} class:desc={sortBy == 'lastNameOrCompanyName' && !$searchCriteriaStore.sortAscending} class:asc={sortBy == 'lastNameOrCompanyName' && $searchCriteriaStore.sortAscending}>Nachname</th>
-                    <th scope="col" on:click={e => changeSortBy('firstName')} class:desc={sortBy == 'firstName' && !$searchCriteriaStore.sortAscending} class:asc={sortBy == 'firstName' && $searchCriteriaStore.sortAscending}>Vorname</th>
-                    <th scope="col">Adresse</th>
-                    <th scope="col">Typ</th>
+                    <th scope="col" on:click={e => changeSortBy('lastNameOrCompanyName')} class:desc={sortBy == 'lastNameOrCompanyName' && !$searchCriteriaStore.sortAscending} class:asc={sortBy == 'lastNameOrCompanyName' && $searchCriteriaStore.sortAscending}>{$_('search.lastNameOrCompanyName')}</th>
+                    <th scope="col" on:click={e => changeSortBy('firstName')} class:desc={sortBy == 'firstName' && !$searchCriteriaStore.sortAscending} class:asc={sortBy == 'firstName' && $searchCriteriaStore.sortAscending}>{$_('search.firstName')}</th>
+                    <th scope="col">{$_('search.address')}</th>
+                    <th scope="col">{$_('search.subscriptions')}</th>
                 </tr>
                 </thead>
 

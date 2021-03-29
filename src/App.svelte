@@ -67,7 +67,7 @@
         console.log("hello.......................................")
         state = 'Edit';
         editMemberId = id.detail;
-        navigate("/member", { replace: true });
+        navigate("/member/" + editMemberId, { replace: true });
     }
 
     function logout() {
@@ -76,16 +76,6 @@
             auth.logout(auth0Client);
         } else {
             isAuthenticated.set(false);
-        }
-    }
-
-    function select(event) {
-        if (event.detail === "createMember") {
-            state = "New";
-        } else if (event.detail === "search") {
-            state = "Search";
-        } else if (event.detail === "admin") {
-            state = "Admin"
         }
     }
 
@@ -102,7 +92,7 @@
     {#if $isLocaleLoaded}
 
         <Router url="{url}">
-            <Navbar on:componentSelected={select} on:login={login} on:logout={logout} isAuthenticated={isAuthenticated}
+            <Navbar on:login={login} on:logout={logout} isAuthenticated={isAuthenticated}
                     user={user}/>
 
             <div class="container">
@@ -118,8 +108,11 @@
 <!--                        <Route path="/search">-->
 <!--                            <Search on:memberSelected={editMember}/>-->
 <!--                        </Route>-->
+                        <Route path="member/:id" let:params>
+                            <Member id={params.id} />
+                        </Route>
                         <Route path="member">
-                            <Member id={editMemberId}/>
+                            <Member id={undefined} />
                         </Route>
                         <Route path="admin">
                             <Admin/>

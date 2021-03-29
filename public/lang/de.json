@@ -12,7 +12,11 @@
   },
   "search": {
     "term": "Suchbegriff",
-    "period": "Mitgliedschafts-Periode"
+    "period": "Mitgliedschafts-Periode",
+    "firstName": "Vorname",
+    "lastNameOrCompanyName": "Nach- oder Firmenname",
+    "address": "Adresse",
+    "subscriptions": "Mitgliedschaften"
   },
   "member": {
     "title": "Mitglied"

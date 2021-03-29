@@ -12,7 +12,11 @@
   },
   "search": {
     "term": "Search term",
-    "period": "Subscription period"
+    "period": "Subscription period",
+    "firstName": "First name",
+    "lastNameOrCompanyName": "Last or Company name",
+    "address": "Address",
+    "subscriptions": "Subscriptions"
   },
   "member": {
     "title": "Member"

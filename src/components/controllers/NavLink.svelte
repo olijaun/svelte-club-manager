@@ -20,5 +20,5 @@
 </style>
 
 <Link to="{to}" getProps="{getProps}">
-    <slot />
+    <slot/>
 </Link>
