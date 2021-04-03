@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import {onMount} from 'svelte';
     import {loadPeriods, updateMember, loadMember} from '../services/memberService'
     import Error from "./Error.svelte";

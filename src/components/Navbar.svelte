@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import {createEventDispatcher} from 'svelte';
     import {_, changeLanguageTo, isLocaleLoaded, locale} from '../services/i18n';
     import LocaleSwitcher from "./controllers/LocaleSwitcher.svelte";

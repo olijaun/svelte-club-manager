@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import {createEventDispatcher, onMount} from 'svelte';
     import {countries} from '../services/countries'
     import {bindClass, form} from 'svelte-forms';
@@ -22,12 +22,12 @@
 
     let errorMessage;
 
-    let isNaturalPerson = true;
+    let isNaturalPerson : boolean = true;
     let personPromise;
 
     let type = TYPES[0];
-    let firstName;
-    let lastNameOrCompanyName;
+    let firstName : string;
+    let lastNameOrCompanyName : string;
     let birthdate;
 
     let email;

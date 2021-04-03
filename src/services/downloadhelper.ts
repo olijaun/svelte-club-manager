@@ -1,6 +1,12 @@
 import streamSaver from 'streamsaver';
 
-export async function download(filename, res) {
+declare global {
+    interface Window {
+        writer: WritableStreamDefaultWriter<any>;
+    }
+}
+
+export async function download(filename: string, res: Response) {
     console.log("saving to " + filename);
     const fileStream = streamSaver.createWriteStream(filename);
 
@@ -17,8 +23,8 @@ export async function download(filename, res) {
     const reader = res.body.getReader();
     const pump = () => reader.read()
         .then(res => res.done
-            ? writer.close()
-            : writer.write(res.value).then(pump))
+            ? window.writer.close()
+            : window.writer.write(res.value).then(pump))
 
     pump();
 }

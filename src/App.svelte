@@ -1,5 +1,5 @@
-<script>
-    import {Route, Router} from "svelte-routing";
+<script lang="ts">
+    import {Route, Router, navigate} from "svelte-routing";
     import {onMount} from "svelte";
     import auth from "./services/authService";
     import {isReady} from './services/personService'
@@ -10,7 +10,6 @@
     import Navbar from "./components/Navbar.svelte";
     import Member from "./components/Member.svelte";
     import Admin from "./components/Admin.svelte";
-    import { navigate } from "svelte-routing";
 
     export let url = "";
 
@@ -26,6 +25,7 @@
         initI18n();
 
         if (!noAuthMode) {
+
             auth0Client = await auth.createClient();
 
             isAuthenticated.set(await auth0Client.isAuthenticated());
@@ -56,7 +56,7 @@
 
     function login() {
         if (!noAuthMode) {
-            auth.loginWithPopup(auth0Client);
+            auth.loginWithPopup(auth0Client, {});
         } else {
             console.log("set to authenticated")
             isAuthenticated.set(true);

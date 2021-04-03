@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import Person from "./Person.svelte";
     import Subscriptions from "./Subscriptions.svelte";
     import {_} from '../services/i18n';

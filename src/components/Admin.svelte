@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import {onMount} from 'svelte';
     import {exportPersons, importPersonCsv} from '../services/personService'
     import {exportMembers, importMemberCsv} from '../services/memberService'
