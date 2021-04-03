@@ -1,8 +1,10 @@
 import { HttpClientBuilder } from "../http-client/HttpClientBuilder";
+import { API_BASE_URL } from "./serviceCommons"
+import {v4 as uuidv4} from 'uuid';
 
-let target = HttpClientBuilder.createClient().target("http://localhost:8080/api");
+let target = HttpClientBuilder.createClient().target(API_BASE_URL);
 
-export async function isReady() {
+export async function isReady() : Promise<boolean> {
     try {
         await target.path("readiness").request().get();
         return true;
@@ -22,11 +24,6 @@ export async function importPersonCsv(csv: string): Promise<any> {
     return response.json();
 }
 
-export async function registerPersonId(id: string): Promise<string> {
-    const response = await target.path(`person-id-requests/${id}`).request().put("");
-    return response.text();
-}
-
 export async function updatePerson(personId: string, data: any): Promise<string> {
     const response = await target
         .path(`persons/${personId}`)
@@ -37,7 +34,16 @@ export async function updatePerson(personId: string, data: any): Promise<string>
     return response.text();
 }
 
-export async function createPerson(personId: string, personIdRequestId: string, data: any) : Promise<string> {
+async function registerPersonId(id: string): Promise<string> {
+    const response = await target.path(`person-id-requests/${id}`).request().put("");
+    return response.text();
+}
+
+export async function createPerson(data: any) : Promise<string> {
+
+    let personIdRequestId = uuidv4();
+
+    const personId = await registerPersonId(personIdRequestId);
 
     const response = await target
         .path(`persons/${personId}`)
@@ -49,7 +55,7 @@ export async function createPerson(personId: string, personIdRequestId: string, 
     return response.text();
 }
 
-export async function loadPerson(id: string) {
+export async function loadPerson(id: string) : Promise<any> {
     const response = await target.path(`persons/${id}`).request().get();
     return response.json();
 }

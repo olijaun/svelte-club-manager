@@ -2,7 +2,7 @@
     import {createEventDispatcher, onMount} from 'svelte';
     import {countries} from '../services/countries'
     import {bindClass, form} from 'svelte-forms';
-    import {createPerson, loadPerson, registerPersonId, updatePerson} from '../services/personService';
+    import {createPerson, loadPerson, updatePerson} from '../services/personService';
     import {v4 as uuidv4} from 'uuid';
     import { isPossiblePhoneNumber, isValidPhoneNumber } from 'libphonenumber-js';
     import {_} from '../services/i18n';
@@ -164,9 +164,7 @@
 
         try {
             if (!id) {
-                let personIdRequestId = uuidv4();
-                id = await registerPersonId(personIdRequestId);
-                await createPerson(id, personIdRequestId, person);
+                id = await createPerson(person);
             } else {
                 console.log("update person");
                 await updatePerson(id, person);
